@@ -1108,24 +1108,18 @@
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var STUCK_LINES = [
-    "Help me i am stuck here and don't know why",
-    "It's kinda cozy after all"
-  ];
-
   var EDGE_PAD = 4; // feet rest right at a div's own top border, body standing outside/above it
 
   var current = stops[0];
-  var phase = 'wander';           // 'wander' | 'travel' | 'stuck1' | 'stuck2'
+  var phase = 'wander';           // 'wander' | 'travel'
   var facing = 1;
   var x = 0, y = 0, wDir = 1;
   var wSpeed = 20;                 // px/s
   var legs = null, legIdx = 0, legT0 = 0; // travel: queued {x0,y0,x1,y1,dur}
   var pendingTarget = null;
   var lastT = null;
-  var decisionTimer = null, bubbleTimer = null;
+  var bubbleTimer = null;
   var keys = { left:false, right:false };
-  var lastUserInput = 0;
 
   function rand(min, max){ return min + Math.random() * (max - min); }
   function easeInOutQuad(t){ return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
@@ -1188,39 +1182,13 @@
     return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
   }
 
-  function scheduleDecision(){
-    clearTimeout(decisionTimer);
-    decisionTimer = setTimeout(decide, rand(4500, 9500));
-  }
-
-  function decide(){
-    if (phase !== 'wander') return;
-    if (Date.now() - lastUserInput < 3000){ scheduleDecision(); return; }
-    if (Math.random() < 0.22){ startStuck(); }
-    else { startTravel(); }
-  }
-
-  function startStuck(){
-    phase = 'stuck1';
-    sprite.classList.add('stuck');
-    showBubble(STUCK_LINES[0], null);
-    setTimeout(function(){
-      phase = 'stuck2';
-      showBubble(STUCK_LINES[1], null);
-      setTimeout(function(){
-        hideBubble();
-        sprite.classList.remove('stuck');
-        phase = 'wander';
-        scheduleDecision();
-      }, 2300);
-    }, 2300);
-  }
-
   // walk to a rail edge, climb straight down/up it, walk to the target spot —
   // every leg stays inside a div's own bounds, so he's never above/outside one.
+  // triggered only by the player (space bar) — no autonomous roaming anymore.
   function startTravel(){
+    if (phase !== 'wander') return;
     var target = pickStop(current);
-    if (!target){ scheduleDecision(); return; }
+    if (!target) return;
     var fromLane = laneBounds(current);
     var toLane = laneBounds(target);
     var rx = Math.min(Math.max(railX(), toLane.minX), toLane.maxX);
@@ -1233,7 +1201,7 @@
       { x0:rx, y0:toLane.top, x1:tx, y1:toLane.top }
     ].filter(function(l){ return Math.abs(l.x1-l.x0) > 2 || Math.abs(l.y1-l.y0) > 2; });
 
-    if (!legs.length){ scheduleDecision(); return; }
+    if (!legs.length) return;
 
     legs.forEach(function(l){
       var dist = Math.abs(l.x1 - l.x0) + Math.abs(l.y1 - l.y0);
@@ -1255,7 +1223,6 @@
     sprite.classList.remove('jumping');
     phase = 'wander';
     showBubble(current.getAttribute('data-line') || '', 3500);
-    scheduleDecision();
   }
 
   function tick(now){
@@ -1298,9 +1265,6 @@
           if (legIdx >= legs.length){ land(); }
         }
       }
-    } else {
-      // stuck: stay put, but keep tracking the div vertically as the page scrolls
-      y = laneBounds(current).top;
     }
 
     tick.prevT = now;
@@ -1312,13 +1276,12 @@
   window.addEventListener('keydown', function(e){
     if (document.activeElement && INTERACTIVE_TAGS.test(document.activeElement.tagName)) return;
     if (e.key === 'ArrowLeft'){
-      keys.left = true; lastUserInput = Date.now(); e.preventDefault();
+      keys.left = true; e.preventDefault();
     } else if (e.key === 'ArrowRight'){
-      keys.right = true; lastUserInput = Date.now(); e.preventDefault();
+      keys.right = true; e.preventDefault();
     } else if ((e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') && !e.repeat){
-      lastUserInput = Date.now();
       e.preventDefault();
-      if (phase === 'wander'){ clearTimeout(decisionTimer); startTravel(); }
+      startTravel();
     }
   });
   window.addEventListener('keyup', function(e){
@@ -1331,7 +1294,6 @@
   y = b0.top;
   render();
   setTimeout(function(){ showBubble(current.getAttribute('data-line') || '', 3500); }, 900);
-  scheduleDecision();
   requestAnimationFrame(tick);
 })();
 </script>
