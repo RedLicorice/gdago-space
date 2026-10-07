@@ -1,7 +1,7 @@
 <title>gdago</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0e1420;
@@ -9,14 +9,12 @@
     --surface-2:#1b2435;
     --text:#eef1ea;
     --text-muted:#93a0b5;
-    --accent:#ffab3d;
-    --accent-ink:#2a1a04;
+    --accent:#5eead4;
+    --accent-ink:#06201c;
     --accent-2:#2fdcc9;
     --line:#2a3447;
     --line-strong:#3c4a63;
     --shadow: 0 1px 0 rgba(0,0,0,.4);
-    --shift-echo:#ff5d7a;
-    --shift-echo-2:#a855c9;
   }
   @media (prefers-color-scheme: light){
     :root:not([data-theme="dark"]){
@@ -25,8 +23,8 @@
       --surface-2:#e3e6de;
       --text:#161b22;
       --text-muted:#525c6b;
-      --accent:#e0670f;
-      --accent-ink:#fff6ea;
+      --accent:#0e7d72;
+      --accent-ink:#f4fffd;
       --accent-2:#0a9385;
       --line:#c9cdc1;
       --line-strong:#aab0a1;
@@ -39,8 +37,8 @@
     --surface-2:#e3e6de;
     --text:#161b22;
     --text-muted:#525c6b;
-    --accent:#e0670f;
-    --accent-ink:#fff6ea;
+    --accent:#0e7d72;
+    --accent-ink:#f4fffd;
     --accent-2:#0a9385;
     --line:#c9cdc1;
     --line-strong:#aab0a1;
@@ -52,8 +50,8 @@
     --surface-2:#1b2435;
     --text:#eef1ea;
     --text-muted:#93a0b5;
-    --accent:#ffab3d;
-    --accent-ink:#2a1a04;
+    --accent:#5eead4;
+    --accent-ink:#06201c;
     --accent-2:#2fdcc9;
     --line:#2a3447;
     --line-strong:#3c4a63;
@@ -77,7 +75,7 @@
   }
   .wrap{max-width:1080px;margin:0 auto;}
   a{color:inherit;}
-  h1,h2,h3{font-family:'Unbounded',system-ui,sans-serif;text-wrap:balance;margin:0;}
+  h1,h2,h3{font-family:'Spline Sans Mono',monospace;text-wrap:balance;margin:0;}
   .eyebrow{
     font-family:'Spline Sans Mono',monospace;
     font-size:.72rem;
@@ -100,6 +98,7 @@
     -webkit-backdrop-filter:blur(14px) saturate(160%);
     border-bottom:1px solid var(--line);
     transition:border-color .4s ease;
+    padding-inline:clamp(20px,5vw,64px);
   }
   .topbar::before{
     content:"";
@@ -116,16 +115,17 @@
   .topbar-inner{
     max-width:1080px;
     margin-inline:auto;
-    padding:14px clamp(20px,5vw,64px);
+    padding-block:14px;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:20px;
   }
   .topbar-logo{
-    font-family:'Unbounded',sans-serif;
-    font-weight:900;
+    font-family:'Spline Sans Mono',monospace;
+    font-weight:700;
     font-size:1.1rem;
+    line-height:1;
     letter-spacing:-.01em;
     text-decoration:none;
     color:var(--text);
@@ -231,8 +231,7 @@
     inset:-28px;
     z-index:-1;
     background:radial-gradient(60% 60% at 25% 20%, var(--accent), transparent 70%),
-               radial-gradient(50% 50% at 85% 90%, var(--accent-2), transparent 70%),
-               radial-gradient(45% 45% at 60% 50%, var(--shift-echo), transparent 72%);
+               radial-gradient(50% 50% at 85% 90%, var(--accent-2), transparent 70%);
     opacity:.35;
     filter:blur(44px);
     animation:glow-pulse 7s ease-in-out infinite;
@@ -240,21 +239,21 @@
   }
   @keyframes glow-pulse{
     0%,100%{opacity:.28;}
-    35%{opacity:.5;}
-    70%{opacity:.4;}
+    50%{opacity:.5;}
   }
   @keyframes glow-breathe{
     0%,100%{box-shadow:0 0 0 1px var(--accent), 0 0 34px -6px var(--accent);}
-    40%{box-shadow:0 0 0 1px var(--accent-2), 0 0 34px -6px var(--accent-2);}
-    75%{box-shadow:0 0 0 1px var(--shift-echo), 0 0 34px -6px var(--shift-echo);}
+    50%{box-shadow:0 0 0 1px var(--accent-2), 0 0 34px -6px var(--accent-2);}
   }
   .wordmark{
-    font-size:clamp(3rem,9vw,5.6rem);
-    font-weight:900;
+    font-family:'Spline Sans Mono',monospace;
+    font-size:clamp(2.6rem,8vw,4.8rem);
+    font-weight:700;
     letter-spacing:-.02em;
-    line-height:.92;
-    background:linear-gradient(100deg, var(--text) 22%, var(--accent-2) 36%,
-                var(--accent) 42%, var(--shift-echo) 50%, var(--text) 64%);
+    line-height:1.15;
+    padding-bottom:.08em;
+    background:linear-gradient(100deg, var(--text) 25%, var(--accent-2) 42%,
+                var(--accent) 50%, var(--text) 68%);
     background-size:280% 100%;
     -webkit-background-clip:text;
     background-clip:text;
@@ -318,6 +317,8 @@
   .section-head p{
     margin:0;
     max-width:46ch;
+    font-size:.92rem;
+    line-height:1.5;
     color:var(--text-muted);
   }
 
@@ -547,6 +548,16 @@
     pointer-events:none;
     will-change:left,top,transform;
   }
+  #gdago-sprite::after{
+    content:"";
+    position:absolute;
+    inset:-22px;
+    z-index:-1;
+    border-radius:50%;
+    background:radial-gradient(circle, color-mix(in srgb, var(--accent-2) 40%, transparent) 0%, transparent 72%);
+    filter:blur(6px);
+    pointer-events:none;
+  }
   #gdago-sprite .idle{
     position:absolute;top:0;left:0;
     animation:idle-bob 1.6s ease-in-out infinite;
@@ -578,6 +589,24 @@
     transition:left .5s cubic-bezier(.3,.6,.3,1), top .5s cubic-bezier(.3,.6,.3,1), opacity .25s ease;
   }
   #gdago-bubble.show{opacity:1;}
+  #cursor-glow{
+    position:fixed;
+    width:460px;
+    height:460px;
+    left:0;
+    top:0;
+    margin-left:-230px;
+    margin-top:-230px;
+    border-radius:50%;
+    background:radial-gradient(circle, color-mix(in srgb, var(--accent-2) 16%, transparent) 0%, transparent 70%);
+    pointer-events:none;
+    z-index:-1;
+    opacity:0;
+    transition:opacity .4s ease;
+    will-change:transform;
+  }
+  #cursor-glow.show{opacity:1;}
+
   #gdago-bubble::after{
     content:"";
     position:absolute;
@@ -601,6 +630,8 @@
 <div id="shift-bg" aria-hidden="true"></div>
 
 <canvas id="page-mesh" aria-hidden="true"></canvas>
+
+<div id="cursor-glow" aria-hidden="true"></div>
 
 <nav class="topbar">
   <div class="topbar-inner">
@@ -845,6 +876,24 @@
 <div id="gdago-bubble" aria-hidden="true"></div>
 
 <script>
+(function(){
+  // a soft glow that follows a real mouse — skipped on touch-only devices.
+  if (!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches)) return;
+  var glow = document.getElementById('cursor-glow');
+  if (!glow) return;
+  var raf = null, px = 0, py = 0;
+  function move(e){
+    px = e.clientX; py = e.clientY;
+    glow.classList.add('show');
+    if (raf) return;
+    raf = requestAnimationFrame(function(){
+      glow.style.transform = 'translate(' + px + 'px,' + py + 'px)';
+      raf = null;
+    });
+  }
+  window.addEventListener('mousemove', move, {passive:true});
+  window.addEventListener('mouseleave', function(){ glow.classList.remove('show'); });
+})();
 (function(){
   // low-poly animated mesh behind the whole page — triangulated plane, fixed
   // to the viewport, each facet pulsing brightness on its own phase, tinted
