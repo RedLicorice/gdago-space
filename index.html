@@ -1004,6 +1004,7 @@
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
   var points, tris, raf;
+  var lastW = 0, lastH = 0;
 
   // handles both "#rrggbb" and the "rgb(r,g,b)" strings the invasion script
   // writes once it has run — reading a token shouldn't care which it finds.
@@ -1054,6 +1055,14 @@
   function resize(){
     var w = window.innerWidth, h = window.innerHeight;
     if (!w || !h) return;
+    // mobile browsers fire resize when the address bar hides/shows on scroll —
+    // a height-only blip, not a real layout change. rebuilding the mesh (with
+    // its random triangle jitter) on every one of those made the background
+    // appear to "jump" while scrolling, so we only rebuild on a real change.
+    var widthChanged = Math.abs(w - lastW) > 2;
+    var heightChanged = Math.abs(h - lastH) > 150;
+    if (lastW && !widthChanged && !heightChanged) return;
+    lastW = w; lastH = h;
     canvas.width = w*dpr; canvas.height = h*dpr;
     canvas.style.width = w+'px'; canvas.style.height = h+'px';
     ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -1111,6 +1120,24 @@
       if (reduceMotion){ draw(0); } else { raf = requestAnimationFrame(loop); }
     }, 200);
   });
+
+  // a slight, deliberate parallax on mobile — the mesh drifts at a fraction
+  // of scroll speed instead of sitting perfectly still or riding 1:1 with it.
+  var isMobile = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+  if (isMobile && !reduceMotion){
+    var parallaxTicking = false;
+    var applyParallax = function(){
+      var shift = Math.min(window.scrollY * 0.06, 50);
+      canvas.style.transform = 'translateY(' + shift + 'px)';
+      parallaxTicking = false;
+    };
+    window.addEventListener('scroll', function(){
+      if (parallaxTicking) return;
+      parallaxTicking = true;
+      requestAnimationFrame(applyParallax);
+    }, {passive:true});
+    applyParallax();
+  }
 })();
 (function(){
   // the topbar logo only shows once the hero's own big wordmark has scrolled
