@@ -344,7 +344,7 @@
 
   /* ---------- sections ---------- */
   section{padding-block:clamp(40px,7vw,76px);}
-  section + section{border-top:1px dashed var(--line);}
+  section + section{border-top:1px dashed color-mix(in srgb, var(--accent-2) 55%, var(--line));}
   .section-head{
     display:flex;
     justify-content:space-between;
@@ -595,7 +595,7 @@
     font-family:'Spline Sans Mono',monospace;
     font-size:.72rem;
     color:var(--text-muted);
-    border-top:1px dashed var(--line);
+    border-top:1px dashed color-mix(in srgb, var(--accent-2) 55%, var(--line));
     padding-top:18px;
   }
   .legend b{color:var(--text-muted);}
