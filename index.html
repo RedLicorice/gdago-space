@@ -204,6 +204,11 @@
   }
   .lang-toggle:hover{color:var(--text);border-color:var(--accent-2);}
 
+  .i18n-scrambling{
+    color:var(--accent-2);
+    text-shadow:0 0 6px color-mix(in srgb, var(--accent-2) 55%, transparent);
+  }
+
   .topbar-burger{
     display:none;
     flex:none;
@@ -1206,6 +1211,7 @@
   };
 
   var LANG_KEY = 'gdago-lang';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function detectLang(){
     try {
       var saved = localStorage.getItem(LANG_KEY);
@@ -1214,11 +1220,63 @@
     return (navigator.language || '').toLowerCase().indexOf('it') === 0 ? 'it' : 'en';
   }
 
-  function applyLang(lang){
+  // decrypt-style scramble: each char randomizes until its own reveal time
+  // comes up, left to right, then the element's real markup (with any
+  // nested tags) snaps back in — a little cipher-breaking flourish on
+  // every language swap, matrix-style.
+  var SCRAMBLE_CHARS = 'アイウエオカキクケコサシスセソタチツテト0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&*+=<>/\\|[]{}~^';
+  function randChar(){ return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]; }
+  function stripTags(html){
+    var tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || '';
+  }
+
+  var scrambleJobs = [];
+  var scrambleRaf = null;
+  function tickScramble(now){
+    scrambleJobs.forEach(function(job){
+      var elapsed = now - job.start;
+      var out = '', finished = true;
+      for (var i = 0; i < job.len; i++){
+        if (elapsed >= job.revealAt[i]) out += job.toText[i] || '';
+        else { finished = false; out += randChar(); }
+      }
+      job.el.textContent = out;
+      job.finished = finished;
+    });
+    scrambleJobs = scrambleJobs.filter(function(job){
+      if (job.finished){
+        job.el.innerHTML = job.finalHTML;
+        job.el.classList.remove('i18n-scrambling');
+        return false;
+      }
+      return true;
+    });
+    scrambleRaf = scrambleJobs.length ? requestAnimationFrame(tickScramble) : null;
+  }
+  function scrambleTo(el, finalHTML){
+    scrambleJobs = scrambleJobs.filter(function(job){ return job.el !== el; });
+    var toText = stripTags(finalHTML);
+    var len = Math.max((el.textContent || '').length, toText.length, 1);
+    var duration = Math.max(380, Math.min(900, 300 + len * 3));
+    var revealAt = [];
+    for (var i = 0; i < len; i++){
+      revealAt.push((i / len) * duration * 0.75 + Math.random() * 120);
+    }
+    el.classList.add('i18n-scrambling');
+    scrambleJobs.push({ el:el, toText:toText, finalHTML:finalHTML, len:len, revealAt:revealAt, start:performance.now(), finished:false });
+    if (!scrambleRaf) scrambleRaf = requestAnimationFrame(tickScramble);
+  }
+
+  function applyLang(lang, opts){
+    var animate = !!(opts && opts.animate) && !reduceMotion;
     document.documentElement.setAttribute('lang', lang);
     document.querySelectorAll('[data-i18n]').forEach(function(el){
       var entry = I18N[el.getAttribute('data-i18n')];
-      if (entry) el.innerHTML = entry[lang];
+      if (!entry) return;
+      if (animate) scrambleTo(el, entry[lang]);
+      else el.innerHTML = entry[lang];
     });
     document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
       var entry = I18N[el.getAttribute('data-i18n-aria')];
@@ -1230,7 +1288,9 @@
     });
     var toggle = document.getElementById('lang-toggle');
     if (toggle){
-      toggle.textContent = lang === 'it' ? 'EN' : 'IT';
+      var label = lang === 'it' ? 'EN' : 'IT';
+      if (animate) scrambleTo(toggle, label);
+      else toggle.textContent = label;
       toggle.setAttribute('aria-label', lang === 'it' ? 'Switch to English' : "Passa all'italiano");
     }
     window.gdagoLang = lang;
@@ -1246,7 +1306,7 @@
     toggleBtn.addEventListener('click', function(){
       var next = window.gdagoLang === 'it' ? 'en' : 'it';
       try { localStorage.setItem(LANG_KEY, next); } catch (e) {}
-      applyLang(next);
+      applyLang(next, { animate:true });
     });
   }
 })();
