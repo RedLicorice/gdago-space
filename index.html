@@ -4,6 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link id="favicon" rel="icon" type="image/png">
 <style>
   :root{
     --bg:#150f2a;
@@ -1071,6 +1072,67 @@
 <div id="gdago-bubble" aria-hidden="true"></div>
 
 <script>
+(function(){
+  // favicon: a "G" in the same face as the wordmark, same coral, redrawn to
+  // the same irregular neon-flicker beats the hero's "g" uses — favicons
+  // can't run CSS animation, so this swaps the icon's data URL on a timer
+  // instead of animating one image.
+  var link = document.getElementById('favicon');
+  if (!link || !window.HTMLCanvasElement) return;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var size = 64;
+  var canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  var ctx = canvas.getContext('2d');
+
+  function draw(alpha){
+    ctx.clearRect(0, 0, size, size);
+    ctx.fillStyle = '#150f2a';
+    var r = 14;
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.arcTo(size, 0, size, size, r);
+    ctx.arcTo(size, size, 0, size, r);
+    ctx.arcTo(0, size, 0, 0, r);
+    ctx.arcTo(0, 0, size, 0, r);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.font = "700 44px 'Space Grotesk', sans-serif";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(255,93,122,' + alpha + ')';
+    ctx.fillText('G', size / 2, size / 2 + 3);
+    link.href = canvas.toDataURL('image/png');
+  }
+
+  // same beats as @keyframes neon-flicker, expressed as [percent, opacity]
+  // of a 6.5s loop.
+  var beats = [
+    [0, 1], [4, .3], [6, 1], [7, .12], [9, 1], [9.5, .5], [10, 1],
+    [31, 1], [32, .4], [34, 1],
+    [58, 1], [59, .18], [60, .7], [61, .1], [62, 1],
+    [85, 1], [86, .35], [87, 1], [100, 1]
+  ];
+  var cycleMs = 6500;
+  var timers = [];
+  function scheduleCycle(){
+    beats.forEach(function(b){
+      timers.push(setTimeout(function(){ draw(b[1]); }, cycleMs * b[0] / 100));
+    });
+    timers.push(setTimeout(scheduleCycle, cycleMs));
+  }
+
+  function start(){
+    draw(1);
+    if (!reduceMotion) scheduleCycle();
+  }
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(start);
+  } else {
+    start();
+  }
+})();
 (function(){
   // mobile nav: burger toggles a dropdown; closes on link click, outside
   // click, or Escape.
