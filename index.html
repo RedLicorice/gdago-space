@@ -1125,41 +1125,48 @@
 
   var TOKENS = ['--bg','--surface','--surface-2','--text','--text-muted',
                 '--accent','--accent-ink','--accent-2','--line','--line-strong'];
+  // three stops along the scroll: violet at the very top, blue once you're
+  // into the games/projects content, then the shift's own coral/violet.
+  var VIOLET = {
+    '--bg':[21,15,42],        '--surface':[29,22,56],     '--surface-2':[38,29,71],
+    '--text':[238,241,234],   '--text-muted':[155,151,181],
+    '--accent':[94,234,212],  '--accent-ink':[6,32,28],   '--accent-2':[47,220,201],
+    '--line':[47,42,74],      '--line-strong':[66,58,99]
+  };
+  var BLUE = {
+    '--bg':[14,20,32],        '--surface':[20,27,41],     '--surface-2':[27,36,53],
+    '--text':[238,241,234],   '--text-muted':[147,160,181],
+    '--accent':[94,234,212],  '--accent-ink':[6,32,28],   '--accent-2':[47,220,201],
+    '--line':[42,52,71],      '--line-strong':[60,74,99]
+  };
   var SHIFT = {
     '--bg':[28,15,51],        '--surface':[44,23,80],     '--surface-2':[58,31,99],
     '--text':[246,238,255],   '--text-muted':[217,198,239],
     '--accent':[255,93,122],  '--accent-ink':[42,15,31],  '--accent-2':[67,230,201],
     '--line':[74,45,114],     '--line-strong':[122,79,176]
   };
+  var MAIN_FADE_PX = 900; // scroll distance over which violet settles to blue
 
-  function hexToRgb(hex){
-    hex = hex.trim().replace('#','');
-    if (hex.length === 3) hex = hex.split('').map(function(c){ return c+c; }).join('');
-    var n = parseInt(hex, 16);
-    return [(n>>16)&255, (n>>8)&255, n&255];
-  }
   function mix(a, b, p){
     return 'rgb(' + Math.round(a[0]+(b[0]-a[0])*p) + ','
                    + Math.round(a[1]+(b[1]-a[1])*p) + ','
                    + Math.round(a[2]+(b[2]-a[2])*p) + ')';
   }
-
-  // capture whatever the page's resolved palette is right now (respects
-  // light/dark/explicit theme) as the 0%-invaded baseline.
-  var BASE = {};
-  TOKENS.forEach(function(t){
-    BASE[t] = hexToRgb(getComputedStyle(root).getPropertyValue(t) || '#000000');
-  });
+  function mixRgb(a, b, p){
+    return [a[0]+(b[0]-a[0])*p, a[1]+(b[1]-a[1])*p, a[2]+(b[2]-a[2])*p];
+  }
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ticking = false;
   function update(){
+    var pMain = reduceMotion ? 1 : Math.max(0, Math.min(1, window.scrollY / MAIN_FADE_PX));
     var r = dayjob.getBoundingClientRect();
     var p = reduceMotion
       ? (r.top <= window.innerHeight * 0.55 ? 1 : 0)
       : Math.max(0, Math.min(1, 1 - (r.top / window.innerHeight)));
     TOKENS.forEach(function(t){
-      root.style.setProperty(t, mix(BASE[t], SHIFT[t], p));
+      var base = mixRgb(VIOLET[t], BLUE[t], pMain);
+      root.style.setProperty(t, mix(base, SHIFT[t], p));
     });
 
     // the wall's own diagonal seam (its ::before), grown from "right at the
