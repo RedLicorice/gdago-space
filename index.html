@@ -328,7 +328,7 @@
   }
   .panel{
     background:var(--surface);
-    padding:84px 26px 26px;
+    padding:26px;
     display:flex;
     flex-direction:column;
     gap:14px;
@@ -486,7 +486,7 @@
     backdrop-filter:blur(18px) saturate(160%);
     -webkit-backdrop-filter:blur(18px) saturate(160%);
     box-shadow:0 24px 70px rgba(20,0,30,.35);
-    padding:84px clamp(20px,4vw,34px) clamp(20px,4vw,34px);
+    padding:clamp(20px,4vw,34px);
     display:flex;
     flex-direction:column;
     gap:16px;
@@ -1113,7 +1113,7 @@
     "It's kinda cozy after all"
   ];
 
-  var TOP_PAD = 10; // how far inside each div's own top edge he stands — never outside/above it
+  var EDGE_PAD = 4; // feet rest right at a div's own top border, body standing outside/above it
 
   var current = stops[0];
   var phase = 'wander';           // 'wander' | 'travel' | 'stuck1' | 'stuck2'
@@ -1124,6 +1124,8 @@
   var pendingTarget = null;
   var lastT = null;
   var decisionTimer = null, bubbleTimer = null;
+  var keys = { left:false, right:false };
+  var lastUserInput = 0;
 
   function rand(min, max){ return min + Math.random() * (max - min); }
   function easeInOutQuad(t){ return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
@@ -1141,7 +1143,7 @@
         maxX = Math.max(maxX, r.right);
       }
     });
-    var innerTop = top + TOP_PAD;
+    var innerTop = top - H - EDGE_PAD;
     var safeMinX = minX + 8, safeMaxX = maxX - W - 8;
     if (safeMaxX < safeMinX){ safeMinX = safeMaxX = (minX + maxX) / 2 - W / 2; }
     return { top: innerTop, minX: safeMinX, maxX: safeMaxX };
@@ -1193,6 +1195,7 @@
 
   function decide(){
     if (phase !== 'wander') return;
+    if (Date.now() - lastUserInput < 3000){ scheduleDecision(); return; }
     if (Math.random() < 0.22){ startStuck(); }
     else { startTravel(); }
   }
@@ -1263,9 +1266,17 @@
       var b = laneBounds(current);
       if (!reduceMotion){
         var dt = Math.min(0.05, (now - (tick.prevT || now)) / 1000);
-        x += wDir * wSpeed * dt;
-        if (x > b.maxX){ x = b.maxX; wDir = -1; facing = -1; }
-        if (x < b.minX){ x = b.minX; wDir = 1; facing = 1; }
+        var manualDir = (keys.left && !keys.right) ? -1 : ((keys.right && !keys.left) ? 1 : 0);
+        if (manualDir !== 0){
+          x += manualDir * wSpeed * 2.2 * dt;
+          facing = manualDir;
+          wDir = manualDir;
+          x = Math.min(Math.max(x, b.minX), b.maxX);
+        } else {
+          x += wDir * wSpeed * dt;
+          if (x > b.maxX){ x = b.maxX; wDir = -1; facing = -1; }
+          if (x < b.minX){ x = b.minX; wDir = 1; facing = 1; }
+        }
       } else {
         x = Math.min(Math.max(x, b.minX), b.maxX);
       }
@@ -1296,6 +1307,24 @@
     render();
     requestAnimationFrame(tick);
   }
+
+  var INTERACTIVE_TAGS = /^(A|BUTTON|INPUT|TEXTAREA|SELECT)$/;
+  window.addEventListener('keydown', function(e){
+    if (document.activeElement && INTERACTIVE_TAGS.test(document.activeElement.tagName)) return;
+    if (e.key === 'ArrowLeft'){
+      keys.left = true; lastUserInput = Date.now(); e.preventDefault();
+    } else if (e.key === 'ArrowRight'){
+      keys.right = true; lastUserInput = Date.now(); e.preventDefault();
+    } else if ((e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') && !e.repeat){
+      lastUserInput = Date.now();
+      e.preventDefault();
+      if (phase === 'wander'){ clearTimeout(decisionTimer); startTravel(); }
+    }
+  });
+  window.addEventListener('keyup', function(e){
+    if (e.key === 'ArrowLeft') keys.left = false;
+    if (e.key === 'ArrowRight') keys.right = false;
+  });
 
   var b0 = laneBounds(current);
   x = (b0.minX + b0.maxX) / 2;
