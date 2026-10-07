@@ -283,6 +283,22 @@
     font-style:normal;
     color:var(--shift-echo);
     -webkit-text-fill-color:var(--shift-echo);
+    display:inline-block;
+    animation:neon-flicker 5s linear infinite;
+  }
+  .topbar-logo em{animation:neon-flicker 5s linear infinite;}
+  @keyframes neon-flicker{
+    0%, 19%, 21%, 23%, 54%, 56%, 100% {
+      opacity:1;
+      text-shadow:0 0 6px var(--shift-echo), 0 0 16px var(--shift-echo);
+    }
+    20%, 22%, 55% {
+      opacity:.45;
+      text-shadow:none;
+    }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .wordmark em,.topbar-logo em{animation:none;text-shadow:0 0 6px var(--shift-echo);}
   }
   @media (prefers-reduced-motion:reduce){
     .titleblock{animation:rise .7s cubic-bezier(.2,.7,.2,1) both;}
