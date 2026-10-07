@@ -15,6 +15,7 @@
     --line:#2a3447;
     --line-strong:#3c4a63;
     --shadow: 0 1px 0 rgba(0,0,0,.4);
+    --shift-echo:#ff5d7a;
   }
   @media (prefers-color-scheme: light){
     :root:not([data-theme="dark"]){
@@ -104,13 +105,19 @@
     content:"";
     position:absolute;inset:0 0 auto 0;
     height:2px;
-    background:linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
-    background-size:200% 100%;
+    background:linear-gradient(90deg, var(--accent), var(--shift-echo), var(--accent-2), var(--accent));
+    background-size:300% 100%;
     animation:topbar-shimmer 7s linear infinite;
+    opacity:.5;
+    transition:opacity .6s ease, height .4s ease;
+  }
+  .topbar.handoff::before{
+    opacity:1;
+    height:3px;
   }
   @keyframes topbar-shimmer{
     0%{background-position:0% 0;}
-    100%{background-position:200% 0;}
+    100%{background-position:300% 0;}
   }
   .topbar-inner{
     max-width:1080px;
@@ -143,7 +150,7 @@
   @media (prefers-reduced-motion:reduce){
     .topbar-logo{transition:opacity .3s ease;}
   }
-  .topbar-logo em{font-style:normal;color:var(--accent);}
+  .topbar-logo em{font-style:normal;color:var(--shift-echo);}
   .topbar-links{
     display:flex;
     gap:2px;
@@ -231,7 +238,8 @@
     inset:-28px;
     z-index:-1;
     background:radial-gradient(60% 60% at 25% 20%, var(--accent), transparent 70%),
-               radial-gradient(50% 50% at 85% 90%, var(--accent-2), transparent 70%);
+               radial-gradient(50% 50% at 85% 90%, var(--accent-2), transparent 70%),
+               radial-gradient(30% 30% at 70% 60%, var(--shift-echo), transparent 75%);
     opacity:.35;
     filter:blur(44px);
     animation:glow-pulse 7s ease-in-out infinite;
@@ -243,7 +251,8 @@
   }
   @keyframes glow-breathe{
     0%,100%{box-shadow:0 0 0 1px var(--accent), 0 0 34px -6px var(--accent);}
-    50%{box-shadow:0 0 0 1px var(--accent-2), 0 0 34px -6px var(--accent-2);}
+    33%{box-shadow:0 0 0 1px var(--accent-2), 0 0 34px -6px var(--accent-2);}
+    66%{box-shadow:0 0 0 1px var(--shift-echo), 0 0 32px -7px var(--shift-echo);}
   }
   .wordmark{
     font-family:'Spline Sans Mono',monospace;
@@ -266,8 +275,8 @@
   }
   .wordmark em{
     font-style:normal;
-    color:var(--accent);
-    -webkit-text-fill-color:var(--accent);
+    color:var(--shift-echo);
+    -webkit-text-fill-color:var(--shift-echo);
   }
   @media (prefers-reduced-motion:reduce){
     .titleblock{animation:rise .7s cubic-bezier(.2,.7,.2,1) both;}
@@ -314,6 +323,25 @@
     margin-bottom:30px;
   }
   .section-head h2{font-size:clamp(1.5rem,3vw,2.1rem);}
+  #builds .section-head,
+  #games .section-head{position:relative;}
+  #builds .section-head::before,
+  #games .section-head::before{
+    content:"";
+    position:absolute;
+    inset:-24px -24px -24px -12px;
+    z-index:-1;
+    background:radial-gradient(50% 70% at 15% 30%, var(--accent), transparent 70%),
+               radial-gradient(45% 60% at 85% 70%, var(--accent-2), transparent 70%);
+    opacity:.2;
+    filter:blur(40px);
+    animation:glow-pulse 8s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @media (prefers-reduced-motion:reduce){
+    #builds .section-head::before,
+    #games .section-head::before{animation:none;opacity:.16;}
+  }
   .section-head p{
     margin:0;
     max-width:46ch;
@@ -563,7 +591,13 @@
     animation:idle-bob 1.6s ease-in-out infinite;
   }
   #gdago-sprite.jumping .idle{animation:none;}
+  #gdago-sprite.hanging .idle{animation:hang-grip .38s ease both;}
   #gdago-sprite.stuck .idle{animation:shake .25s ease-in-out infinite;}
+  @keyframes hang-grip{
+    0%{transform:translateY(-3px);}
+    40%{transform:translateY(1px);}
+    100%{transform:translateY(0);}
+  }
   @keyframes idle-bob{
     0%,100%{transform:translateY(0);}
     50%{transform:translateY(-2px);}
@@ -591,21 +625,37 @@
   #gdago-bubble.show{opacity:1;}
   #cursor-glow{
     position:fixed;
-    width:460px;
-    height:460px;
     left:0;
     top:0;
-    margin-left:-230px;
-    margin-top:-230px;
-    border-radius:50%;
-    background:radial-gradient(circle, color-mix(in srgb, var(--accent-2) 16%, transparent) 0%, transparent 70%);
+    width:0;
+    height:0;
     pointer-events:none;
     z-index:-1;
     opacity:0;
-    transition:opacity .4s ease;
+    transition:opacity .6s ease;
     will-change:transform;
   }
   #cursor-glow.show{opacity:1;}
+  #cursor-glow-inner{
+    position:absolute;
+    width:620px;
+    height:620px;
+    left:-310px;
+    top:-310px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle, color-mix(in srgb, var(--accent-2) 13%, transparent) 0%, transparent 55%),
+      radial-gradient(circle, color-mix(in srgb, var(--accent) 9%, transparent) 20%, transparent 70%);
+    filter:blur(28px);
+    animation:cursor-glow-breathe 9s ease-in-out infinite;
+  }
+  @keyframes cursor-glow-breathe{
+    0%,100%{transform:scale(1) rotate(0deg);}
+    50%{transform:scale(1.15) rotate(8deg);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    #cursor-glow-inner{animation:none;}
+  }
 
   #gdago-bubble::after{
     content:"";
@@ -631,7 +681,7 @@
 
 <canvas id="page-mesh" aria-hidden="true"></canvas>
 
-<div id="cursor-glow" aria-hidden="true"></div>
+<div id="cursor-glow" aria-hidden="true"><div id="cursor-glow-inner"></div></div>
 
 <nav class="topbar">
   <div class="topbar-inner">
@@ -877,22 +927,41 @@
 
 <script>
 (function(){
-  // a soft glow that follows a real mouse — skipped on touch-only devices.
+  // a smoky glow that drifts toward the mouse rather than snapping to it —
+  // skipped on touch-only devices.
   if (!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches)) return;
   var glow = document.getElementById('cursor-glow');
   if (!glow) return;
-  var raf = null, px = 0, py = 0;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var tx = window.innerWidth / 2, ty = window.innerHeight / 2;
+  var cx = tx, cy = ty;
+  var started = false;
+
   function move(e){
-    px = e.clientX; py = e.clientY;
+    tx = e.clientX; ty = e.clientY;
     glow.classList.add('show');
-    if (raf) return;
-    raf = requestAnimationFrame(function(){
-      glow.style.transform = 'translate(' + px + 'px,' + py + 'px)';
-      raf = null;
-    });
+    if (!started){
+      cx = tx; cy = ty;
+      started = true;
+      render();
+    }
   }
   window.addEventListener('mousemove', move, {passive:true});
   window.addEventListener('mouseleave', function(){ glow.classList.remove('show'); });
+
+  function render(){
+    glow.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+  }
+  function loop(){
+    if (started){
+      var lag = reduceMotion ? 1 : 0.06;
+      cx += (tx - cx) * lag;
+      cy += (ty - cy) * lag;
+      render();
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
 })();
 (function(){
   // low-poly animated mesh behind the whole page — triangulated plane, fixed
@@ -961,6 +1030,7 @@
   }
 
   function draw(t){
+    if (!tris || !points) return;
     var w = canvas.width/dpr, h = canvas.height/dpr;
     ctx.clearRect(0, 0, w, h);
     var cs = getComputedStyle(document.documentElement);
@@ -1013,14 +1083,19 @@
 })();
 (function(){
   // the topbar logo only shows once the hero's own big wordmark has scrolled
-  // out from under it — avoids the two logos being on screen at once.
+  // out from under it — avoids the two logos being on screen at once. the
+  // topbar's glowing top bar picks up where the hero's glowing border left
+  // off, the same handoff moment.
   var hero = document.querySelector('.titleblock');
   var topbarLogo = document.querySelector('.topbar-logo');
+  var topbarEl = document.querySelector('.topbar');
   if (hero && topbarLogo){
     var tbTicking = false;
     var checkLogo = function(){
       var r = hero.getBoundingClientRect();
-      topbarLogo.classList.toggle('visible', r.bottom < 60);
+      var gone = r.bottom < 60;
+      topbarLogo.classList.toggle('visible', gone);
+      if (topbarEl) topbarEl.classList.toggle('handoff', gone);
       tbTicking = false;
     };
     var onLogoScroll = function(){
@@ -1247,10 +1322,12 @@
     var rx0 = Math.min(Math.max(rx, fromLane.minX), fromLane.maxX);
     var tx = rand(toLane.minX, toLane.maxX);
 
+    var falling = toLane.top > fromLane.top; // moving to a lower platform
+
     legs = [
-      { x0:x, y0:y, x1:rx0, y1:fromLane.top },
-      { x0:rx0, y0:fromLane.top, x1:rx, y1:toLane.top },
-      { x0:rx, y0:toLane.top, x1:tx, y1:toLane.top }
+      { type:'walk', x0:x, y0:y, x1:rx0, y1:fromLane.top },
+      { type:'vertical', fall:falling, x0:rx0, y0:fromLane.top, x1:rx, y1:toLane.top },
+      { type:'walk', x0:rx, y0:toLane.top, x1:tx, y1:toLane.top }
     ].filter(function(l){ return Math.abs(l.x1-l.x0) > 2 || Math.abs(l.y1-l.y0) > 2; });
 
     if (!legs.length) return;
@@ -1259,6 +1336,17 @@
       var dist = Math.abs(l.x1 - l.x0) + Math.abs(l.y1 - l.y0);
       l.dur = reduceMotion ? 1 : Math.max(220, Math.min(650, dist * 5));
     });
+
+    // fell onto a lower platform — grab the edge and hang for a beat before
+    // walking on, instead of sliding straight past it.
+    if (!reduceMotion){
+      var fallLegIdx = -1;
+      legs.forEach(function(l, i){ if (l.type === 'vertical' && l.fall) fallLegIdx = i; });
+      if (fallLegIdx !== -1){
+        var fl = legs[fallLegIdx];
+        legs.splice(fallLegIdx + 1, 0, { type:'hang', x0:fl.x1, y0:fl.y1, x1:fl.x1, y1:fl.y1, dur:380 });
+      }
+    }
 
     legIdx = 0;
     legT0 = performance.now();
@@ -1273,6 +1361,7 @@
     legs = null; pendingTarget = null;
     wDir = Math.random() < 0.5 ? -1 : 1;
     sprite.classList.remove('jumping');
+    sprite.classList.remove('hanging');
     phase = 'wander';
     showBubble(current.getAttribute('data-line') || '', 3500);
   }
@@ -1308,9 +1397,10 @@
         var dx = leg.x1 - leg.x0;
         if (Math.abs(dx) > 4) facing = dx < 0 ? -1 : 1;
         var t = Math.min(1, (now - legT0) / leg.dur);
-        var e = easeInOutQuad(t);
+        var e = leg.fall ? (t * t) : easeInOutQuad(t);
         x = leg.x0 + dx * e;
         y = leg.y0 + (leg.y1 - leg.y0) * e;
+        sprite.classList.toggle('hanging', leg.type === 'hang');
         if (t >= 1){
           legIdx++;
           legT0 = now;
@@ -1327,18 +1417,20 @@
   var INTERACTIVE_TAGS = /^(A|BUTTON|INPUT|TEXTAREA|SELECT)$/;
   window.addEventListener('keydown', function(e){
     if (document.activeElement && INTERACTIVE_TAGS.test(document.activeElement.tagName)) return;
-    if (e.key === 'ArrowLeft'){
+    var k = e.key.toLowerCase();
+    if (k === 'arrowleft' || k === 'a'){
       keys.left = true; e.preventDefault();
-    } else if (e.key === 'ArrowRight'){
+    } else if (k === 'arrowright' || k === 'd'){
       keys.right = true; e.preventDefault();
-    } else if ((e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') && !e.repeat){
+    } else if ((e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar' || k === 'w' || k === 'arrowup') && !e.repeat){
       e.preventDefault();
       startTravel();
     }
   });
   window.addEventListener('keyup', function(e){
-    if (e.key === 'ArrowLeft') keys.left = false;
-    if (e.key === 'ArrowRight') keys.right = false;
+    var k = e.key.toLowerCase();
+    if (k === 'arrowleft' || k === 'a') keys.left = false;
+    if (k === 'arrowright' || k === 'd') keys.right = false;
   });
 
   var b0 = laneBounds(current);
