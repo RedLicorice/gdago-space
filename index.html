@@ -204,10 +204,10 @@
   }
   .lang-toggle:hover{color:var(--text);border-color:var(--accent-2);}
 
-  .i18n-scrambling{
-    color:var(--accent-2);
-    text-shadow:0 0 6px color-mix(in srgb, var(--accent-2) 55%, transparent);
-  }
+  .i18n-scrambling{color:var(--text-muted);}
+  .i18n-scrambling .sc-a{color:var(--accent);text-shadow:0 0 6px color-mix(in srgb, var(--accent) 60%, transparent);}
+  .i18n-scrambling .sc-b{color:var(--tag-green);text-shadow:0 0 6px color-mix(in srgb, var(--tag-green) 60%, transparent);}
+  .i18n-scrambling .sc-c{color:var(--shift-echo);text-shadow:0 0 6px color-mix(in srgb, var(--shift-echo) 60%, transparent);}
 
   .topbar-burger{
     display:none;
@@ -1225,7 +1225,9 @@
   // nested tags) snaps back in — a little cipher-breaking flourish on
   // every language swap, matrix-style.
   var SCRAMBLE_CHARS = 'アイウエオカキクケコサシスセソタチツテト0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&*+=<>/\\|[]{}~^';
+  var ACCENT_CLASSES = ['sc-a', 'sc-b', 'sc-c']; // cyan, green, coral — the site's own accent trio
   function randChar(){ return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]; }
+  function escapeHtml(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function stripTags(html){
     var tmp = document.createElement('div');
     tmp.innerHTML = html;
@@ -1237,12 +1239,17 @@
   function tickScramble(now){
     scrambleJobs.forEach(function(job){
       var elapsed = now - job.start;
-      var out = '', finished = true;
+      var html = '', finished = true;
       for (var i = 0; i < job.len; i++){
-        if (elapsed >= job.revealAt[i]) out += job.toText[i] || '';
-        else { finished = false; out += randChar(); }
+        if (elapsed >= job.revealAt[i]){
+          html += escapeHtml(job.toText[i] || '');
+        } else {
+          finished = false;
+          var ch = escapeHtml(randChar());
+          html += job.accentClass[i] ? ('<span class="' + job.accentClass[i] + '">' + ch + '</span>') : ch;
+        }
       }
-      job.el.textContent = out;
+      job.el.innerHTML = html;
       job.finished = finished;
     });
     scrambleJobs = scrambleJobs.filter(function(job){
@@ -1260,12 +1267,22 @@
     var toText = stripTags(finalHTML);
     var len = Math.max((el.textContent || '').length, toText.length, 1);
     var duration = Math.max(380, Math.min(900, 300 + len * 3));
-    var revealAt = [];
+    // sparse, non-adjacent accent positions — only a handful of noise chars
+    // flash cyan/green/coral while scrambling, picked once per element so
+    // the sparkle doesn't jitter frame to frame.
+    var revealAt = [], accentClass = [], prevAccented = false;
     for (var i = 0; i < len; i++){
       revealAt.push((i / len) * duration * 0.75 + Math.random() * 120);
+      if (!prevAccented && Math.random() < 0.16){
+        accentClass.push(ACCENT_CLASSES[Math.floor(Math.random() * ACCENT_CLASSES.length)]);
+        prevAccented = true;
+      } else {
+        accentClass.push(null);
+        prevAccented = false;
+      }
     }
     el.classList.add('i18n-scrambling');
-    scrambleJobs.push({ el:el, toText:toText, finalHTML:finalHTML, len:len, revealAt:revealAt, start:performance.now(), finished:false });
+    scrambleJobs.push({ el:el, toText:toText, finalHTML:finalHTML, len:len, revealAt:revealAt, accentClass:accentClass, start:performance.now(), finished:false });
     if (!scrambleRaf) scrambleRaf = requestAnimationFrame(tickScramble);
   }
 
