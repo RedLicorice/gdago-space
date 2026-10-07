@@ -126,6 +126,7 @@
     100%{background-position:400% 0;}
   }
   .topbar-inner{
+    position:relative;
     max-width:1080px;
     margin-inline:auto;
     padding-block:14px;
@@ -185,6 +186,62 @@
   }
   @media (prefers-reduced-motion:reduce){
     .topbar::before{animation:none;}
+  }
+
+  .topbar-burger{
+    display:none;
+    flex:none;
+    width:34px;height:34px;
+    border:1px solid var(--line-strong);
+    background:transparent;
+    border-radius:2px;
+    cursor:pointer;
+    position:relative;
+    padding:0;
+  }
+  .topbar-burger span{
+    position:absolute;
+    left:8px;right:8px;
+    height:1px;
+    background:var(--text);
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .topbar-burger span:nth-child(1){top:12px;}
+  .topbar-burger span:nth-child(2){top:17px;}
+  .topbar-burger span:nth-child(3){top:22px;}
+  .topbar-burger[aria-expanded="true"] span:nth-child(1){top:17px;transform:rotate(45deg);}
+  .topbar-burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .topbar-burger[aria-expanded="true"] span:nth-child(3){top:17px;transform:rotate(-45deg);}
+
+  .topbar-dropdown{
+    display:none;
+    position:absolute;
+    top:100%;
+    right:clamp(20px,5vw,64px);
+    margin-top:8px;
+    flex-direction:column;
+    min-width:180px;
+    background:var(--surface);
+    border:1px solid var(--line-strong);
+    box-shadow:0 16px 40px rgba(0,0,0,.4);
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.85rem;
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(-6px);
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .topbar-dropdown.open{display:flex;opacity:1;transform:translateY(0);}
+  .topbar-dropdown a{
+    padding:12px 16px;
+    text-decoration:none;
+    color:var(--text-muted);
+    border-top:1px solid var(--line);
+  }
+  .topbar-dropdown a:first-child{border-top:none;}
+  .topbar-dropdown a:hover{color:var(--text);background:var(--surface-2);}
+  @media (max-width:620px){
+    .topbar-burger{display:block;}
   }
 
   /* ---------- spine ruler (desktop only) ---------- */
@@ -326,6 +383,19 @@
     text-align:right;
   }
   .meta-row b{color:var(--text);font-weight:600;}
+  @media (max-width:560px){
+    .titleblock{
+      padding-top:68px;
+      align-items:flex-start;
+    }
+    .meta-row{
+      position:absolute;
+      top:16px; right:16px;
+      gap:3px;
+      font-size:.62rem;
+    }
+    .wordmark{font-size:2.3rem;max-width:72%;}
+  }
 
   .lede{
     margin-top:30px;
@@ -758,6 +828,15 @@
       <a href="#dayjob">the shift</a>
       <a href="#hello">say hi</a>
     </div>
+    <button class="topbar-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="topbar-dropdown">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-dropdown" id="topbar-dropdown">
+      <a href="#builds">projects</a>
+      <a href="#games">games</a>
+      <a href="#dayjob">the shift</a>
+      <a href="#hello">say hi</a>
+    </div>
   </div>
 </nav>
 
@@ -953,10 +1032,10 @@
       <p class="field-note">"Most of the job is reading a system nobody fully remembers building, and
         deciding what's actually true about it."</p>
       <p>
-        TIBCO integrations for a multi-utility, debt that predates me, deadlines a regulator set without
-        asking anyone in the room. The technical part is rarely the hard part — the hard part is getting a
-        client to trust an architecture decision from someone whose badge says contractor. Specifics stay
-        for the interview.
+        TIBCO integrations for a multi-utility, systems built long before me, regulatory deadlines that
+        don't move for anyone. The technical part is rarely the hard part — the real work is owning the
+        decision end to end: propose it, defend it in the room, answer for it after. Specifics stay for
+        the interview.
       </p>
     </div>
   </div>
@@ -992,6 +1071,31 @@
 <div id="gdago-bubble" aria-hidden="true"></div>
 
 <script>
+(function(){
+  // mobile nav: burger toggles a dropdown; closes on link click, outside
+  // click, or Escape.
+  var burger = document.querySelector('.topbar-burger');
+  var dropdown = document.getElementById('topbar-dropdown');
+  if (!burger || !dropdown) return;
+  function close(){
+    dropdown.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+  function toggle(){
+    var open = dropdown.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  burger.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+  dropdown.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') close();
+  });
+  document.addEventListener('click', function(e){
+    if (!dropdown.contains(e.target) && e.target !== burger) close();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') close();
+  });
+})();
 (function(){
   // the project/game grids are horizontal scroll-snap carousels — swipe on
   // touch, click arrows where there's a real mouse. wrap each one so the
