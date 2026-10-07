@@ -382,13 +382,42 @@
   }
 
   /* ---------- panel grid (reused by projects + games) ---------- */
+  .carousel{position:relative;}
   .panel-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    display:flex;
     gap:1px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
     background:var(--line);
     border:1px solid var(--line);
   }
+  .panel-grid::-webkit-scrollbar{display:none;}
+  .carousel-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    width:36px;height:36px;
+    border-radius:50%;
+    border:1px solid var(--line-strong);
+    background:color-mix(in srgb, var(--surface) 82%, transparent);
+    backdrop-filter:blur(6px);
+    color:var(--text);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-family:'Spline Sans Mono',monospace;
+    font-size:1rem;
+    line-height:1;
+    transition:background .2s ease, color .2s ease, opacity .2s ease;
+  }
+  .carousel-btn:hover{background:var(--accent-2);color:var(--accent-ink);}
+  .carousel-btn.prev{left:-16px;}
+  .carousel-btn.next{right:-16px;}
+  .carousel-btn:disabled{opacity:.25;cursor:default;pointer-events:none;}
+  @media (max-width:640px){.carousel-btn{display:none;}}
   .panel{
     background:var(--surface);
     padding:26px;
@@ -397,6 +426,8 @@
     gap:14px;
     position:relative;
     overflow:hidden;
+    flex:0 0 380px;
+    scroll-snap-align:start;
     transition:background .2s ease, box-shadow .3s ease, transform .3s ease;
   }
   .panel::after{
@@ -456,6 +487,8 @@
   .panel.private .play{color:var(--text-muted);cursor:default;}
   .panel.wip .play::after{content:"⋯";}
   .panel.private .play::after{content:"●";font-size:.6rem;}
+  @media (max-width:900px){ .panel{flex-basis:320px;} }
+  @media (max-width:560px){ .panel{flex-basis:84%;} }
   .hazard{
     position:absolute;inset:0 0 auto 0;height:5px;
     background:repeating-linear-gradient(135deg,var(--accent) 0 10px,transparent 10px 20px);
@@ -957,6 +990,44 @@
 <div id="gdago-bubble" aria-hidden="true"></div>
 
 <script>
+(function(){
+  // the project/game grids are horizontal scroll-snap carousels — swipe on
+  // touch, click arrows where there's a real mouse. wrap each one so the
+  // buttons can sit outside the scrolling area, overlaid on its edges.
+  var grids = document.querySelectorAll('.panel-grid');
+  var canHover = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  grids.forEach(function(grid){
+    var wrap = document.createElement('div');
+    wrap.className = 'carousel';
+    grid.parentNode.insertBefore(wrap, grid);
+    wrap.appendChild(grid);
+    if (!canHover) return;
+
+    var prev = document.createElement('button');
+    prev.type = 'button'; prev.className = 'carousel-btn prev';
+    prev.setAttribute('aria-label', 'Scroll left'); prev.textContent = '←';
+    var next = document.createElement('button');
+    next.type = 'button'; next.className = 'carousel-btn next';
+    next.setAttribute('aria-label', 'Scroll right'); next.textContent = '→';
+    wrap.appendChild(prev);
+    wrap.appendChild(next);
+
+    function step(){
+      var card = grid.querySelector('.panel');
+      return card ? card.getBoundingClientRect().width + 1 : 300;
+    }
+    prev.addEventListener('click', function(){ grid.scrollBy({left: -step(), behavior: 'smooth'}); });
+    next.addEventListener('click', function(){ grid.scrollBy({left: step(), behavior: 'smooth'}); });
+
+    function updateBtns(){
+      prev.disabled = grid.scrollLeft <= 4;
+      next.disabled = grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 4;
+    }
+    grid.addEventListener('scroll', updateBtns, {passive: true});
+    window.addEventListener('resize', updateBtns);
+    updateBtns();
+  });
+})();
 (function(){
   // a smoky glow that drifts toward the mouse rather than snapping to it —
   // skipped on touch-only devices.
