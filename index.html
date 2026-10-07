@@ -189,6 +189,21 @@
     .topbar::before{animation:none;}
   }
 
+  .lang-toggle{
+    flex:none;
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.04em;
+    color:var(--text-muted);
+    background:transparent;
+    border:1px solid var(--line-strong);
+    border-radius:2px;
+    padding:5px 9px;
+    cursor:pointer;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .lang-toggle:hover{color:var(--text);border-color:var(--accent-2);}
+
   .topbar-burger{
     display:none;
     flex:none;
@@ -824,19 +839,20 @@
   <div class="topbar-inner">
     <a class="topbar-logo" href="#"><em>g</em>dago</a>
     <div class="topbar-links">
-      <a href="#builds">projects</a>
-      <a href="#games">games</a>
-      <a href="#dayjob">the shift</a>
-      <a href="#hello">say hi</a>
+      <a href="#builds" data-i18n="nav.projects">projects</a>
+      <a href="#games" data-i18n="nav.games">games</a>
+      <a href="#dayjob" data-i18n="nav.shift">the shift</a>
+      <a href="#hello" data-i18n="nav.hi">say hi</a>
     </div>
-    <button class="topbar-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="topbar-dropdown">
+    <button class="lang-toggle" id="lang-toggle" type="button">IT</button>
+    <button class="topbar-burger" type="button" data-i18n-aria="burger.aria" aria-label="Open menu" aria-expanded="false" aria-controls="topbar-dropdown">
       <span></span><span></span><span></span>
     </button>
     <div class="topbar-dropdown" id="topbar-dropdown">
-      <a href="#builds">projects</a>
-      <a href="#games">games</a>
-      <a href="#dayjob">the shift</a>
-      <a href="#hello">say hi</a>
+      <a href="#builds" data-i18n="nav.projects">projects</a>
+      <a href="#games" data-i18n="nav.games">games</a>
+      <a href="#dayjob" data-i18n="nav.shift">the shift</a>
+      <a href="#hello" data-i18n="nav.hi">say hi</a>
     </div>
   </div>
 </nav>
@@ -849,15 +865,15 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="titleblock stop" data-line="pitch one: multiplayer darts, but the dartboard is alive and keeps score against you.">
+    <div class="titleblock stop" data-i18n-line="line.hero" data-line="pitch one: multiplayer darts, but the dartboard is alive and keeps score against you.">
       <div class="wordmark"><em>g</em>dago</div>
       <div class="meta-row">
         <span><b>Giuseppe D'Agostino</b></span>
-        <span>Rome, IT — full remote</span>
-        <span>drawn 2026</span>
+        <span data-i18n="hero.location">Rome, IT — full remote</span>
+        <span data-i18n="hero.year">drawn 2026</span>
       </div>
     </div>
-    <p class="lede">
+    <p class="lede" data-i18n="hero.lede">
       Curious builder, pragmatic by choice. Every project here is still a small experiment — staying
       close to the part I actually love: building things, and understanding how they work.
     </p>
@@ -865,13 +881,13 @@
 
   <section id="builds">
     <div class="section-head">
-      <h2>Built from scratch</h2>
-      <p>Three systems built because the off-the-shelf version was too slow, too rigid, or didn't exist.
+      <h2 data-i18n="builds.title">Built from scratch</h2>
+      <p data-i18n="builds.desc">Three systems built because the off-the-shelf version was too slow, too rigid, or didn't exist.
         Not demos — still running.</p>
     </div>
     <div class="panel-grid">
 
-      <div class="panel private stop" data-line="this one exists because i got tired of tailing two terminals at once.">
+      <div class="panel private stop" data-i18n-line="line.loghub" data-line="this one exists because i got tired of tailing two terminals at once.">
         <span class="corner"></span>
         <h3>logHUB</h3>
         <div class="tag-row">
@@ -880,13 +896,13 @@
           <span class="tag">svelte</span>
           <span class="tag">mcp endpoint</span>
         </div>
-        <p>Unifies server logs with the diagnostics a client agent collects on users' machines, in one
+        <p data-i18n="loghub.desc">Unifies server logs with the diagnostics a client agent collects on users' machines, in one
           timeline. Ships an MCP endpoint so a coding agent can read both live while it iterates — the
           thing that makes AI-assisted debugging verifiable instead of vibes.</p>
-        <span class="play">running, not public</span>
+        <span class="play" data-i18n="status.runningNotPublic">running, not public</span>
       </div>
 
-      <div class="panel private stop" data-line="pitch two: git, but it's a courier pigeon. still faster than the office wifi some days.">
+      <div class="panel private stop" data-i18n-line="line.gogitit" data-line="pitch two: git, but it's a courier pigeon. still faster than the office wifi some days.">
         <span class="corner"></span>
         <h3>GoGitIt</h3>
         <div class="tag-row">
@@ -895,13 +911,13 @@
           <span class="tag">websocket</span>
           <span class="tag">tailscale</span>
         </div>
-        <p>The repo lived on a network share and Git over it was slow, so the computation moved to where
+        <p data-i18n="gogitit.desc">The repo lived on a network share and Git over it was slow, so the computation moved to where
           the data already was. One working copy, many stations, near-local <span class="mono">git
           status</span> from anywhere.</p>
-        <span class="play">running, not public</span>
+        <span class="play" data-i18n="status.runningNotPublic">running, not public</span>
       </div>
 
-      <div class="panel private stop" data-line="built this at 1am because a 2GB update took twenty minutes. now it's two and a half.">
+      <div class="panel private stop" data-i18n-line="line.nexus" data-line="built this at 1am because a 2GB update took twenty minutes. now it's two and a half.">
         <span class="corner"></span>
         <h3>Nexus Patch System</h3>
         <div class="tag-row">
@@ -909,9 +925,9 @@
           <span class="tag">fastapi</span>
           <span class="tag">c#/.net</span>
         </div>
-        <p>OAuth2 with proactive refresh behind a swappable interface, OpenAPI REST surface, a C# desktop
+        <p data-i18n="nexus.desc">OAuth2 with proactive refresh behind a swappable interface, OpenAPI REST surface, a C# desktop
           client. In production it ships a 2 GB+ client update in about two and a half minutes.</p>
-        <span class="play">running, not public</span>
+        <span class="play" data-i18n="status.runningNotPublic">running, not public</span>
       </div>
 
     </div>
@@ -919,12 +935,12 @@
 
   <section id="games">
     <div class="section-head">
-      <h2>Worlds shipped</h2>
-      <p>Three games, one backend. Click through — they're live, not screenshots.</p>
+      <h2 data-i18n="games.title">Worlds shipped</h2>
+      <p data-i18n="games.desc">Three games, one backend. Click through — they're live, not screenshots.</p>
     </div>
     <div class="panel-grid">
 
-      <a class="panel stop" data-line="aspromonte is a real place. the boars are not real. probably." href="https://ilporciotto.gdago.space" target="_blank" rel="noopener">
+      <a class="panel stop" data-i18n-line="line.porciotto" data-line="aspromonte is a real place. the boars are not real. probably." href="https://ilporciotto.gdago.space" target="_blank" rel="noopener">
         <span class="corner"></span>
         <h3>Il Porciotto</h3>
         <div class="tag-row">
@@ -932,13 +948,13 @@
           <span class="tag">web</span>
           <span class="tag">Aspromonte</span>
         </div>
-        <p>A cooperative mushroom hunt in Calabria's Aspromonte forest. Learn your species from Luigi, cook
+        <p data-i18n="porciotto.desc">A cooperative mushroom hunt in Calabria's Aspromonte forest. Learn your species from Luigi, cook
           for Memmo, dodge the wild boar — and the forest ranger. Three services sharing one set of rooms
           and accounts, live.</p>
-        <span class="play">play it</span>
+        <span class="play" data-i18n="status.playIt">play it</span>
       </a>
 
-      <a class="panel stop" data-line="pitch three: age of empires, but every villager has strong opinions about the build order." href="https://crownrush.gdago.space" target="_blank" rel="noopener">
+      <a class="panel stop" data-i18n-line="line.crownrush" data-line="pitch three: age of empires, but every villager has strong opinions about the build order." href="https://crownrush.gdago.space" target="_blank" rel="noopener">
         <span class="corner"></span>
         <h3>Crown Rush</h3>
         <div class="tag-row">
@@ -946,12 +962,12 @@
           <span class="tag">browser</span>
           <span class="tag">bots 1–7</span>
         </div>
-        <p>Build Fast, Kill Faster. An Age-of-Empires-shaped skirmish that runs entirely in the browser —
+        <p data-i18n="crownrush.desc">Build Fast, Kill Faster. An Age-of-Empires-shaped skirmish that runs entirely in the browser —
           Three.js for the battlefield, bots for when nobody's around to raid.</p>
-        <span class="play">play it</span>
+        <span class="play" data-i18n="status.playIt">play it</span>
       </a>
 
-      <div class="panel wip stop" data-line="pitch four, still cooking: a shooter with no server, because i don't trust servers i didn't build.">
+      <div class="panel wip stop" data-i18n-line="line.retrostrike" data-line="pitch four, still cooking: a shooter with no server, because i don't trust servers i didn't build.">
         <span class="hazard"></span>
         <span class="corner"></span>
         <h3>RetroStrike</h3>
@@ -960,9 +976,9 @@
           <span class="tag">WebRTC P2P</span>
           <span class="tag">WIP</span>
         </div>
-        <p>A procedural CQB arena and a sprawling procedural city. Babylon.js, serverless peer-to-peer,
+        <p data-i18n="retrostrike.desc">A procedural CQB arena and a sprawling procedural city. Babylon.js, serverless peer-to-peer,
           host-authoritative, bots fill the empty slots. No server — still in the forge.</p>
-        <span class="play">in development</span>
+        <span class="play" data-i18n="status.inDevelopment">in development</span>
       </div>
 
     </div>
@@ -970,10 +986,10 @@
     <details class="underneath">
       <summary>
         <span class="underneath-mark" aria-hidden="true">+</span>
-        <span class="eyebrow">What's underneath</span>
+        <span class="eyebrow" data-i18n="underneath.label">What's underneath</span>
       </summary>
       <div class="underneath-body">
-        <p>
+        <p data-i18n="underneath.body">
           All three run on <strong style="color:var(--text)">apps-platform</strong>: who the player is,
           where their save lives, how the browser hears about it. One account, every game — sign up once
           and it works in Il Porciotto, Crown Rush, whatever's next. It also runs anywhere — my laptop, a
@@ -1024,13 +1040,13 @@
 <section id="dayjob" class="other-shift">
   <div class="other-shift-inner">
     <div class="section-head">
-      <h2>The other shift</h2>
-      <p>Five years of being called in after the room has already decided whose fault it is.</p>
+      <h2 data-i18n="dayjob.title">The other shift</h2>
+      <p data-i18n="dayjob.desc">Five years of being called in after the room has already decided whose fault it is.</p>
     </div>
-    <div class="case stop" data-line="the other pitches are for fun. this one pays rent — same brain, different stakes.">
-      <p class="field-note">"Most of the job is reading a system nobody fully remembers building, and
+    <div class="case stop" data-i18n-line="line.dayjob" data-line="the other pitches are for fun. this one pays rent — same brain, different stakes.">
+      <p class="field-note" data-i18n="dayjob.quote">"Most of the job is reading a system nobody fully remembers building, and
         deciding what's actually true about it."</p>
-      <p>
+      <p data-i18n="dayjob.body">
         TIBCO integrations for a multi-utility, systems built long before me, regulatory deadlines that
         don't move for anyone. The technical part is rarely the hard part — the real work is owning the
         decision end to end: propose it, defend it in the room, answer for it after. Specifics stay for
@@ -1043,24 +1059,24 @@
 <div class="wrap">
 
   <footer>
-    <div class="footer-head stop" id="hello" data-line="that's the whole map. say hi?">
-      <h2>Say hello</h2>
+    <div class="footer-head stop" id="hello" data-i18n-line="line.hello" data-line="that's the whole map. say hi?">
+      <h2 data-i18n="footer.title">Say hello</h2>
     </div>
     <div class="contact-row">
       <a class="contact" href="mailto:contact@gdago.me">
-        <span class="contact-label">wanna play?</span>
+        <span class="contact-label" data-i18n="footer.play">wanna play?</span>
         <span>contact@gdago.me</span>
       </a>
       <a class="contact" href="mailto:recruiting@gdago.me">
-        <span class="contact-label">mean business?</span>
+        <span class="contact-label" data-i18n="footer.business">mean business?</span>
         <span>recruiting@gdago.me</span>
       </a>
     </div>
     <div class="legend">
-      <span><b>LEGEND</b></span>
-      <span>— solid trace: in production</span>
-      <span>- - - dashed trace: in development</span>
-      <span>hazard stripe: WIP</span>
+      <span><b data-i18n="legend.title">LEGEND</b></span>
+      <span data-i18n="legend.solid">— solid trace: in production</span>
+      <span data-i18n="legend.dashed">- - - dashed trace: in development</span>
+      <span data-i18n="legend.hazard">hazard stripe: WIP</span>
     </div>
   </footer>
 
@@ -1070,6 +1086,170 @@
 <div id="gdago-bubble" aria-hidden="true"></div>
 
 <script>
+(function(){
+  // bilingual copy: every translatable element carries data-i18n (innerHTML),
+  // data-i18n-aria (aria-label) or data-i18n-line (the sprite's data-line) —
+  // this dictionary is the single source for both languages, swapped on
+  // toggle and persisted so a return visit keeps the choice.
+  var I18N = {
+    'nav.projects': {en:'projects', it:'progetti'},
+    'nav.games': {en:'games', it:'giochi'},
+    'nav.shift': {en:'the shift', it:'il turno'},
+    'nav.hi': {en:'say hi', it:'scrivimi'},
+    'burger.aria': {en:'Open menu', it:'Apri il menu'},
+    'carousel.prev.aria': {en:'Scroll left', it:'Scorri a sinistra'},
+    'carousel.next.aria': {en:'Scroll right', it:'Scorri a destra'},
+    'hero.location': {en:'Rome, IT — full remote', it:'Roma, IT — full remote'},
+    'hero.year': {en:'drawn 2026', it:'disegnato nel 2026'},
+    'hero.lede': {
+      en:'Curious builder, pragmatic by choice. Every project here is still a small experiment — staying close to the part I actually love: building things, and understanding how they work.',
+      it:'Costruttore curioso, pragmatico per scelta. Ogni progetto qui è ancora un piccolo esperimento — per restare vicino alla parte che amo davvero: costruire cose, e capire come funzionano.'
+    },
+    'builds.title': {en:'Built from scratch', it:'Costruito da zero'},
+    'builds.desc': {
+      en:"Three systems built because the off-the-shelf version was too slow, too rigid, or didn't exist. Not demos — still running.",
+      it:"Tre sistemi nati perché la versione pronta all'uso era troppo lenta, troppo rigida, o non esisteva. Non demo — sono ancora in produzione."
+    },
+    'loghub.desc': {
+      en:"Unifies server logs with the diagnostics a client agent collects on users' machines, in one timeline. Ships an MCP endpoint so a coding agent can read both live while it iterates — the thing that makes AI-assisted debugging verifiable instead of vibes.",
+      it:"Unisce i log del server con la diagnostica che un agente client raccoglie sulle macchine degli utenti, in un'unica timeline. Espone un endpoint MCP così un coding agent può leggere entrambi in tempo reale mentre itera — la cosa che rende il debug assistito dall'AI verificabile, non a sensazione."
+    },
+    'gogitit.desc': {
+      en:'The repo lived on a network share and Git over it was slow, so the computation moved to where the data already was. One working copy, many stations, near-local <span class="mono">git status</span> from anywhere.',
+      it:'Il repo viveva su una share di rete e Git lì sopra era lento, così il calcolo si è spostato dove i dati già stavano. Una sola working copy, tante postazioni, <span class="mono">git status</span> quasi locale da qualsiasi punto.'
+    },
+    'nexus.desc': {
+      en:'OAuth2 with proactive refresh behind a swappable interface, OpenAPI REST surface, a C# desktop client. In production it ships a 2 GB+ client update in about two and a half minutes.',
+      it:"OAuth2 con refresh proattivo dietro un'interfaccia intercambiabile, superficie REST OpenAPI, un client desktop in C#. In produzione distribuisce un aggiornamento client di oltre 2 GB in circa due minuti e mezzo."
+    },
+    'status.runningNotPublic': {en:'running, not public', it:'attivo, non pubblico'},
+    'games.title': {en:'Worlds shipped', it:'Mondi spediti'},
+    'games.desc': {
+      en:"Three games, one backend. Click through — they're live, not screenshots.",
+      it:'Tre giochi, un solo backend. Clicca ed entra — sono live, non screenshot.'
+    },
+    'porciotto.desc': {
+      en:"A cooperative mushroom hunt in Calabria's Aspromonte forest. Learn your species from Luigi, cook for Memmo, dodge the wild boar — and the forest ranger. Three services sharing one set of rooms and accounts, live.",
+      it:"Una caccia ai funghi cooperativa nei boschi dell'Aspromonte, in Calabria. Imparare le specie da Luigi, cucinare per Memmo, schivare il cinghiale — e la guardia forestale. Tre servizi che condividono le stesse stanze e gli stessi account, live."
+    },
+    'crownrush.desc': {
+      en:'Build Fast, Kill Faster. An Age-of-Empires-shaped skirmish that runs entirely in the browser — Three.js for the battlefield, bots for when nobody\'s around to raid.',
+      it:'Build Fast, Kill Faster. Uno skirmish in stile Age of Empires che corre interamente nel browser — Three.js per il campo di battaglia, bot per quando non c\'è nessuno da razziare.'
+    },
+    'status.playIt': {en:'play it', it:'gioca'},
+    'retrostrike.desc': {
+      en:'A procedural CQB arena and a sprawling procedural city. Babylon.js, serverless peer-to-peer, host-authoritative, bots fill the empty slots. No server — still in the forge.',
+      it:"Un'arena CQB procedurale e una città procedurale che si estende a vista d'occhio. Babylon.js, peer-to-peer serverless, autorità all'host, i bot riempiono i posti vuoti. Nessun server — ancora nella fucina."
+    },
+    'status.inDevelopment': {en:'in development', it:'in sviluppo'},
+    'underneath.label': {en:"What's underneath", it:"Cosa c'è sotto"},
+    'underneath.body': {
+      en:'All three run on <strong style="color:var(--text)">apps-platform</strong>: who the player is, where their save lives, how the browser hears about it. One account, every game — sign up once and it works in Il Porciotto, Crown Rush, whatever\'s next. It also runs anywhere — my laptop, a cloud cluster, a home server under the desk, in principle a toaster with enough RAM — without rewriting auth or storage each time. Postgres, Firestore, Redis, Google Pub/Sub, or just memory, picked by environment variable, not by rewrite.',
+      it:'Tutti e tre corrono su <strong style="color:var(--text)">apps-platform</strong>: chi è il giocatore, dove vive il suo salvataggio, come il browser ne viene informato. Un account, ogni gioco — ci si registra una volta e funziona in Il Porciotto, Crown Rush, in quello che viene dopo. Gira anche ovunque — il mio laptop, un cluster cloud, un server di casa sotto la scrivania, in teoria un tostapane con abbastanza RAM — senza riscrivere auth o storage ogni volta. Postgres, Firestore, Redis, Google Pub/Sub, o semplicemente memoria, scelti con una variabile d\'ambiente, non riscrivendo il codice.'
+    },
+    'dayjob.title': {en:'The other shift', it:"L'altro turno"},
+    'dayjob.desc': {
+      en:"Five years of being called in after the room has already decided whose fault it is.",
+      it:"Cinque anni passati a essere chiamato dopo che la stanza ha già deciso di chi è la colpa."
+    },
+    'dayjob.quote': {
+      en:'"Most of the job is reading a system nobody fully remembers building, and deciding what\'s actually true about it."',
+      it:'"Gran parte del lavoro è leggere un sistema che nessuno ricorda più del tutto di aver costruito, e decidere cosa è davvero vero su di esso."'
+    },
+    'dayjob.body': {
+      en:"TIBCO integrations for a multi-utility, systems built long before me, regulatory deadlines that don't move for anyone. The technical part is rarely the hard part — the real work is owning the decision end to end: propose it, defend it in the room, answer for it after. Specifics stay for the interview.",
+      it:"Integrazioni TIBCO per una multiutility, sistemi costruiti molto prima di me, scadenze regolatorie che non si muovono per nessuno. La parte tecnica raramente è quella difficile — il vero lavoro è possedere la decisione dall'inizio alla fine: proporla, difenderla nella stanza, risponderne dopo. I dettagli restano per il colloquio."
+    },
+    'footer.title': {en:'Say hello', it:'Scrivimi'},
+    'footer.play': {en:'wanna play?', it:'vuoi giocare?'},
+    'footer.business': {en:'mean business?', it:'parliamo di lavoro?'},
+    'legend.title': {en:'LEGEND', it:'LEGENDA'},
+    'legend.solid': {en:'— solid trace: in production', it:'— linea continua: in produzione'},
+    'legend.dashed': {en:'- - - dashed trace: in development', it:'- - - linea tratteggiata: in sviluppo'},
+    'legend.hazard': {en:'hazard stripe: WIP', it:'strisce di pericolo: in corso'},
+    'line.hero': {
+      en:'pitch one: multiplayer darts, but the dartboard is alive and keeps score against you.',
+      it:'idea uno: freccette multiplayer, ma il bersaglio è vivo e tiene il punteggio contro di te.'
+    },
+    'line.loghub': {
+      en:'this one exists because i got tired of tailing two terminals at once.',
+      it:'questo esiste perché mi sono stancato di tenere d\'occhio due terminali insieme.'
+    },
+    'line.gogitit': {
+      en:"pitch two: git, but it's a courier pigeon. still faster than the office wifi some days.",
+      it:'idea due: git, ma è un piccione viaggiatore. certi giorni è ancora più veloce del wifi dell\'ufficio.'
+    },
+    'line.nexus': {
+      en:"built this at 1am because a 2GB update took twenty minutes. now it's two and a half.",
+      it:'costruito all\'una di notte perché un aggiornamento da 2GB ci metteva venti minuti. ora ce ne mette due e mezzo.'
+    },
+    'line.porciotto': {
+      en:'aspromonte is a real place. the boars are not real. probably.',
+      it:"l'aspromonte è un posto vero. i cinghiali non sono veri. probabilmente."
+    },
+    'line.crownrush': {
+      en:'pitch three: age of empires, but every villager has strong opinions about the build order.',
+      it:'idea tre: age of empires, ma ogni abitante ha opinioni forti sull\'ordine di costruzione.'
+    },
+    'line.retrostrike': {
+      en:"pitch four, still cooking: a shooter with no server, because i don't trust servers i didn't build.",
+      it:'idea quattro, ancora in cottura: uno shooter senza server, perché non mi fido dei server che non ho costruito io.'
+    },
+    'line.dayjob': {
+      en:'the other pitches are for fun. this one pays rent — same brain, different stakes.',
+      it:"le altre idee sono per divertimento. questa paga l'affitto — stesso cervello, posta in gioco diversa."
+    },
+    'line.hello': {
+      en:"that's the whole map. say hi?",
+      it:'questa è tutta la mappa. mi scrivi?'
+    }
+  };
+
+  var LANG_KEY = 'gdago-lang';
+  function detectLang(){
+    try {
+      var saved = localStorage.getItem(LANG_KEY);
+      if (saved === 'en' || saved === 'it') return saved;
+    } catch (e) {}
+    return (navigator.language || '').toLowerCase().indexOf('it') === 0 ? 'it' : 'en';
+  }
+
+  function applyLang(lang){
+    document.documentElement.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var entry = I18N[el.getAttribute('data-i18n')];
+      if (entry) el.innerHTML = entry[lang];
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
+      var entry = I18N[el.getAttribute('data-i18n-aria')];
+      if (entry) el.setAttribute('aria-label', entry[lang]);
+    });
+    document.querySelectorAll('[data-i18n-line]').forEach(function(el){
+      var entry = I18N[el.getAttribute('data-i18n-line')];
+      if (entry) el.setAttribute('data-line', entry[lang]);
+    });
+    var toggle = document.getElementById('lang-toggle');
+    if (toggle){
+      toggle.textContent = lang === 'it' ? 'EN' : 'IT';
+      toggle.setAttribute('aria-label', lang === 'it' ? 'Switch to English' : "Passa all'italiano");
+    }
+    window.gdagoLang = lang;
+  }
+
+  window.gdagoI18N = I18N;
+  window.gdagoLang = detectLang();
+  window.gdagoApplyLang = applyLang;
+  applyLang(window.gdagoLang);
+
+  var toggleBtn = document.getElementById('lang-toggle');
+  if (toggleBtn){
+    toggleBtn.addEventListener('click', function(){
+      var next = window.gdagoLang === 'it' ? 'en' : 'it';
+      try { localStorage.setItem(LANG_KEY, next); } catch (e) {}
+      applyLang(next);
+    });
+  }
+})();
 (function(){
   // favicon: a "G" in the same face as the wordmark, same coral, redrawn to
   // the same irregular neon-flicker beats the hero's "g" uses — favicons
@@ -1169,12 +1349,18 @@
     wrap.appendChild(grid);
     if (!canHover) return;
 
+    var lang = window.gdagoLang || 'en';
+    var dict = window.gdagoI18N || {};
     var prev = document.createElement('button');
     prev.type = 'button'; prev.className = 'carousel-btn prev';
-    prev.setAttribute('aria-label', 'Scroll left'); prev.textContent = '←';
+    prev.setAttribute('data-i18n-aria', 'carousel.prev.aria');
+    prev.setAttribute('aria-label', (dict['carousel.prev.aria'] || {})[lang] || 'Scroll left');
+    prev.textContent = '←';
     var next = document.createElement('button');
     next.type = 'button'; next.className = 'carousel-btn next';
-    next.setAttribute('aria-label', 'Scroll right'); next.textContent = '→';
+    next.setAttribute('data-i18n-aria', 'carousel.next.aria');
+    next.setAttribute('aria-label', (dict['carousel.next.aria'] || {})[lang] || 'Scroll right');
+    next.textContent = '→';
     wrap.appendChild(prev);
     wrap.appendChild(next);
 
