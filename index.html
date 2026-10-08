@@ -17,6 +17,10 @@
     --accent-2:#2fdcc9;
     --line:#28163e;
     --line-strong:#422862;
+    --mesh-1:#06030b;
+    --mesh-2:#0b0614;
+    --mesh-3:#100a1d;
+    --mesh-4:#160f26;
     --shadow: 0 1px 0 rgba(0,0,0,.4);
     --shift-echo:#ff5d7a;
     --tag-green:#3ddc97;
@@ -62,6 +66,10 @@
     --accent-2:#2fdcc9;
     --line:#28163e;
     --line-strong:#422862;
+    --mesh-1:#06030b;
+    --mesh-2:#0b0614;
+    --mesh-3:#100a1d;
+    --mesh-4:#160f26;
     --shadow: 0 1px 0 rgba(0,0,0,.4);
     --tag-green:#3ddc97;
   }
@@ -1398,14 +1406,14 @@
     var w = canvas.width/dpr, h = canvas.height/dpr;
     ctx.clearRect(0, 0, w, h);
     var cs = getComputedStyle(document.documentElement);
-    // bg itself is desaturated now, so the mesh draws its tone-on-tone
-    // texture from the still-saturated surface/line family instead —
-    // keeps the triangles cohesive rather than mixing in a neutral tone.
+    // dedicated dark, desaturated mesh tones — independent of --surface/
+    // --line, which stay bright/saturated for the cards. this is the
+    // layer actually dominating the screen, so it gets its own palette.
     var TONES = [
-      parseColor(cs.getPropertyValue('--surface')),
-      parseColor(cs.getPropertyValue('--surface-2')),
-      parseColor(cs.getPropertyValue('--line')),
-      parseColor(cs.getPropertyValue('--line-strong'))
+      parseColor(cs.getPropertyValue('--mesh-1')),
+      parseColor(cs.getPropertyValue('--mesh-2')),
+      parseColor(cs.getPropertyValue('--mesh-3')),
+      parseColor(cs.getPropertyValue('--mesh-4'))
     ];
     for (var i = 0; i < tris.length; i++){
       var tri = tris[i];
@@ -1526,6 +1534,16 @@
     '--accent':[255,93,122],  '--accent-ink':[42,15,31],  '--accent-2':[67,230,201],
     '--line':[42,24,62],      '--line-strong':[70,42,96]
   };
+
+  // the low-poly mesh canvas is the dominant thing on screen — it's its own
+  // dark, desaturated, tone-on-tone palette, deliberately NOT sourced from
+  // --surface/--line above (those stay bright+saturated so cards pop). four
+  // close, near-black tones per scroll stage, same mixing as TOKENS.
+  var MESH_TOKENS = ['--mesh-1','--mesh-2','--mesh-3','--mesh-4'];
+  var MESH_PURPLE = { '--mesh-1':[6,3,11],  '--mesh-2':[11,6,20],  '--mesh-3':[16,10,29], '--mesh-4':[22,15,38] };
+  var MESH_BLUE   = { '--mesh-1':[5,6,10],  '--mesh-2':[9,11,18],  '--mesh-3':[13,16,26], '--mesh-4':[18,22,34] };
+  var MESH_SHIFT  = { '--mesh-1':[8,4,14],  '--mesh-2':[14,8,24],  '--mesh-3':[20,12,34], '--mesh-4':[27,17,44] };
+
   var MAIN_FADE_PX = 900; // scroll distance over which purple settles to blue
 
   function mix(a, b, p){
@@ -1548,6 +1566,10 @@
     TOKENS.forEach(function(t){
       var base = mixRgb(PURPLE[t], BLUE[t], pMain);
       root.style.setProperty(t, mix(base, SHIFT[t], p));
+    });
+    MESH_TOKENS.forEach(function(t){
+      var base = mixRgb(MESH_PURPLE[t], MESH_BLUE[t], pMain);
+      root.style.setProperty(t, mix(base, MESH_SHIFT[t], p));
     });
 
     // the wall's own diagonal seam (its ::before), grown from "right at the
