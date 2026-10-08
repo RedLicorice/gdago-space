@@ -478,14 +478,13 @@
   .carousel{position:relative;}
   .panel-grid{
     display:flex;
-    gap:1px;
+    gap:18px;
     overflow-x:auto;
     overflow-y:hidden;
     scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
-    background:var(--line);
-    border:1px solid var(--line);
+    padding-bottom:2px;
   }
   .panel-grid::-webkit-scrollbar{display:none;}
   .carousel-btn{
@@ -513,6 +512,7 @@
   @media (max-width:640px){.carousel-btn{display:none;}}
   .panel{
     background:var(--surface);
+    border:1px solid var(--line);
     padding:26px;
     display:flex;
     flex-direction:column;
@@ -537,10 +537,21 @@
     transform:translateY(-2px);
   }
   .panel:hover::after{transform:translateX(130%);}
+  @keyframes panel-flicker{
+    0%,100%{box-shadow:none;}
+    6%{box-shadow:0 0 0 1px var(--accent-2) inset, 0 14px 34px -18px var(--accent);}
+    9%{box-shadow:none;}
+    13%{box-shadow:0 0 0 1px var(--accent-2) inset, 0 14px 34px -18px var(--accent);}
+    17%{box-shadow:none;}
+    42%{box-shadow:0 0 0 1px var(--accent-2) inset, 0 14px 34px -18px var(--accent);}
+    58%{box-shadow:none;}
+  }
+  .panel.flicker{animation:panel-flicker 1.7s ease-in-out 1;}
   @media (prefers-reduced-motion:reduce){
     .panel{transition:background .2s ease;}
     .panel::after{display:none;}
     .panel:hover{transform:none;}
+    .panel.flicker{animation:none;}
   }
   .panel .corner{
     position:absolute;top:10px;right:10px;
@@ -726,119 +737,12 @@
   }
   .legend b{color:var(--text-muted);}
 
-  /* ---------- climbing sprite ---------- */
-  #gdago-sprite{
-    position:fixed;
-    z-index:40;
-    pointer-events:none;
-    will-change:left,top,transform;
-  }
-  #gdago-sprite::after{
-    content:"";
-    position:absolute;
-    inset:-22px;
-    z-index:-1;
-    border-radius:50%;
-    background:radial-gradient(circle, color-mix(in srgb, var(--accent-2) 40%, transparent) 0%, transparent 72%);
-    filter:blur(6px);
-    pointer-events:none;
-  }
-  #gdago-sprite .idle{
-    position:absolute;top:0;left:0;
-    animation:idle-bob 1.6s ease-in-out infinite;
-  }
-  #gdago-sprite.jumping .idle{animation:none;}
-  #gdago-sprite.hanging .idle{animation:hang-grip .38s ease both;}
-  #gdago-sprite.stuck .idle{animation:shake .25s ease-in-out infinite;}
-  @keyframes hang-grip{
-    0%{transform:translateY(-3px);}
-    40%{transform:translateY(1px);}
-    100%{transform:translateY(0);}
-  }
-  @keyframes idle-bob{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-2px);}
-  }
-  @keyframes shake{
-    0%,100%{transform:translateX(0);}
-    25%{transform:translateX(-2px);}
-    75%{transform:translateX(2px);}
-  }
-  #gdago-bubble{
-    position:fixed;
-    z-index:41;
-    max-width:240px;
-    background:var(--surface);
-    border:1px solid var(--line-strong);
-    color:var(--text);
-    font-family:'Spline Sans Mono',monospace;
-    font-size:.72rem;
-    line-height:1.4;
-    padding:8px 10px;
-    pointer-events:none;
-    opacity:0;
-    transition:left .5s cubic-bezier(.3,.6,.3,1), top .5s cubic-bezier(.3,.6,.3,1), opacity .25s ease;
-  }
-  #gdago-bubble.show{opacity:1;}
-  #cursor-glow{
-    position:fixed;
-    left:0;
-    top:0;
-    width:0;
-    height:0;
-    pointer-events:none;
-    z-index:-1;
-    opacity:0;
-    transition:opacity .6s ease;
-    will-change:transform;
-  }
-  #cursor-glow.show{opacity:1;}
-  #cursor-glow-inner{
-    position:absolute;
-    width:620px;
-    height:620px;
-    left:-310px;
-    top:-310px;
-    border-radius:50%;
-    background:
-      radial-gradient(circle, color-mix(in srgb, var(--accent-2) 13%, transparent) 0%, transparent 55%),
-      radial-gradient(circle, color-mix(in srgb, var(--accent) 9%, transparent) 20%, transparent 70%);
-    filter:blur(28px);
-    animation:cursor-glow-breathe 9s ease-in-out infinite;
-  }
-  @keyframes cursor-glow-breathe{
-    0%,100%{transform:scale(1) rotate(0deg);}
-    50%{transform:scale(1.15) rotate(8deg);}
-  }
-  @media (prefers-reduced-motion:reduce){
-    #cursor-glow-inner{animation:none;}
-  }
 
-  #gdago-bubble::after{
-    content:"";
-    position:absolute;
-    left:16px;bottom:-7px;
-    width:8px;height:8px;
-    background:var(--surface);
-    border-right:1px solid var(--line-strong);
-    border-bottom:1px solid var(--line-strong);
-    transform:rotate(45deg);
-  }
-  @media (prefers-reduced-motion:reduce){
-    #gdago-bubble{transition:opacity .25s ease;}
-    #gdago-sprite .idle{animation:none;}
-    #gdago-sprite.stuck .idle{animation:none;}
-  }
-  @media (max-width:560px){
-    #gdago-bubble{max-width:150px;font-size:.66rem;padding:6px 8px;}
-  }
 </style>
 
 <div id="shift-bg" aria-hidden="true"></div>
 
 <canvas id="page-mesh" aria-hidden="true"></canvas>
-
-<div id="cursor-glow" aria-hidden="true"><div id="cursor-glow-inner"></div></div>
 
 <nav class="topbar">
   <div class="topbar-inner">
@@ -870,7 +774,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="titleblock stop" data-i18n-line="line.hero" data-line="pitch one: multiplayer darts, but the dartboard is alive and keeps score against you.">
+    <div class="titleblock">
       <div class="wordmark"><em>g</em>dago</div>
       <div class="meta-row">
         <span><b>Giuseppe D'Agostino</b></span>
@@ -892,7 +796,7 @@
     </div>
     <div class="panel-grid">
 
-      <div class="panel private stop" data-i18n-line="line.loghub" data-line="this one exists because i got tired of tailing two terminals at once.">
+      <div class="panel private">
         <span class="corner"></span>
         <h3>logHUB</h3>
         <div class="tag-row">
@@ -907,7 +811,7 @@
         <span class="play" data-i18n="status.runningNotPublic">running, not public</span>
       </div>
 
-      <div class="panel private stop" data-i18n-line="line.gogitit" data-line="pitch two: git, but it's a courier pigeon. still faster than the office wifi some days.">
+      <div class="panel private">
         <span class="corner"></span>
         <h3>GoGitIt</h3>
         <div class="tag-row">
@@ -922,7 +826,7 @@
         <span class="play" data-i18n="status.runningNotPublic">running, not public</span>
       </div>
 
-      <div class="panel private stop" data-i18n-line="line.nexus" data-line="built this at 1am because a 2GB update took twenty minutes. now it's two and a half.">
+      <div class="panel private">
         <span class="corner"></span>
         <h3>Nexus Patch System</h3>
         <div class="tag-row">
@@ -945,7 +849,7 @@
     </div>
     <div class="panel-grid">
 
-      <a class="panel stop" data-i18n-line="line.porciotto" data-line="aspromonte is a real place. the boars are not real. probably." href="https://ilporciotto.gdago.space" target="_blank" rel="noopener">
+      <a class="panel" href="https://ilporciotto.gdago.space" target="_blank" rel="noopener">
         <span class="corner"></span>
         <h3>Il Porciotto</h3>
         <div class="tag-row">
@@ -959,7 +863,7 @@
         <span class="play" data-i18n="status.playIt">play it</span>
       </a>
 
-      <a class="panel stop" data-i18n-line="line.crownrush" data-line="pitch three: age of empires, but every villager has strong opinions about the build order." href="https://crownrush.gdago.space" target="_blank" rel="noopener">
+      <a class="panel" href="https://crownrush.gdago.space" target="_blank" rel="noopener">
         <span class="corner"></span>
         <h3>Crown Rush</h3>
         <div class="tag-row">
@@ -972,7 +876,7 @@
         <span class="play" data-i18n="status.playIt">play it</span>
       </a>
 
-      <div class="panel wip stop" data-i18n-line="line.retrostrike" data-line="pitch four, still cooking: a shooter with no server, because i don't trust servers i didn't build.">
+      <div class="panel wip">
         <span class="hazard"></span>
         <span class="corner"></span>
         <h3>RetroStrike</h3>
@@ -1048,7 +952,7 @@
       <h2 data-i18n="dayjob.title">The other shift</h2>
       <p data-i18n="dayjob.desc">Five years of being called in after the room has already decided whose fault it is.</p>
     </div>
-    <div class="case stop" data-i18n-line="line.dayjob" data-line="the other pitches are for fun. this one pays rent — same brain, different stakes.">
+    <div class="case">
       <p class="field-note" data-i18n="dayjob.quote">"Most of the job is reading a system nobody fully remembers building, and
         deciding what's actually true about it."</p>
       <p data-i18n="dayjob.body">
@@ -1064,7 +968,7 @@
 <div class="wrap">
 
   <footer>
-    <div class="footer-head stop" id="hello" data-i18n-line="line.hello" data-line="that's the whole map. say hi?">
+    <div class="footer-head" id="hello">
       <h2 data-i18n="footer.title">Say hello</h2>
     </div>
     <div class="contact-row">
@@ -1087,15 +991,12 @@
 
 </div>
 
-<div id="gdago-sprite" aria-hidden="true"><div class="idle"></div></div>
-<div id="gdago-bubble" aria-hidden="true"></div>
-
 <script>
 (function(){
-  // bilingual copy: every translatable element carries data-i18n (innerHTML),
-  // data-i18n-aria (aria-label) or data-i18n-line (the sprite's data-line) —
-  // this dictionary is the single source for both languages, swapped on
-  // toggle and persisted so a return visit keeps the choice.
+  // bilingual copy: every translatable element carries data-i18n (innerHTML)
+  // or data-i18n-aria (aria-label) — this dictionary is the single source
+  // for both languages, swapped on toggle and persisted so a return visit
+  // keeps the choice.
   var I18N = {
     'nav.projects': {en:'projects', it:'progetti'},
     'nav.games': {en:'games', it:'giochi'},
@@ -1171,43 +1072,7 @@
     'legend.title': {en:'LEGEND', it:'LEGENDA'},
     'legend.solid': {en:'— solid trace: in production', it:'— linea continua: in produzione'},
     'legend.dashed': {en:'- - - dashed trace: in development', it:'- - - linea tratteggiata: in sviluppo'},
-    'legend.hazard': {en:'hazard stripe: WIP', it:'strisce di pericolo: in corso'},
-    'line.hero': {
-      en:'pitch one: multiplayer darts, but the dartboard is alive and keeps score against you.',
-      it:'idea uno: freccette multiplayer, ma il bersaglio è vivo e tiene il punteggio contro di te.'
-    },
-    'line.loghub': {
-      en:'this one exists because i got tired of tailing two terminals at once.',
-      it:'questo esiste perché mi sono stancato di tenere d\'occhio due terminali insieme.'
-    },
-    'line.gogitit': {
-      en:"pitch two: git, but it's a courier pigeon. still faster than the office wifi some days.",
-      it:'idea due: git, ma è un piccione viaggiatore. certi giorni è ancora più veloce del wifi dell\'ufficio.'
-    },
-    'line.nexus': {
-      en:"built this at 1am because a 2GB update took twenty minutes. now it's two and a half.",
-      it:'costruito all\'una di notte perché un aggiornamento da 2GB ci metteva venti minuti. ora ce ne mette due e mezzo.'
-    },
-    'line.porciotto': {
-      en:'aspromonte is a real place. the boars are not real. probably.',
-      it:"l'aspromonte è un posto vero. i cinghiali non sono veri. probabilmente."
-    },
-    'line.crownrush': {
-      en:'pitch three: age of empires, but every villager has strong opinions about the build order.',
-      it:'idea tre: age of empires, ma ogni abitante ha opinioni forti sull\'ordine di costruzione.'
-    },
-    'line.retrostrike': {
-      en:"pitch four, still cooking: a shooter with no server, because i don't trust servers i didn't build.",
-      it:'idea quattro, ancora in cottura: uno shooter senza server, perché non mi fido dei server che non ho costruito io.'
-    },
-    'line.dayjob': {
-      en:'the other pitches are for fun. this one pays rent — same brain, different stakes.',
-      it:"le altre idee sono per divertimento. questa paga l'affitto — stesso cervello, posta in gioco diversa."
-    },
-    'line.hello': {
-      en:"that's the whole map. say hi?",
-      it:'questa è tutta la mappa. mi scrivi?'
-    }
+    'legend.hazard': {en:'hazard stripe: WIP', it:'strisce di pericolo: in corso'}
   };
 
   var LANG_KEY = 'gdago-lang';
@@ -1298,10 +1163,6 @@
     document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
       var entry = I18N[el.getAttribute('data-i18n-aria')];
       if (entry) el.setAttribute('aria-label', entry[lang]);
-    });
-    document.querySelectorAll('[data-i18n-line]').forEach(function(el){
-      var entry = I18N[el.getAttribute('data-i18n-line')];
-      if (entry) el.setAttribute('data-line', entry[lang]);
     });
     var toggle = document.getElementById('lang-toggle');
     if (toggle){
@@ -1456,43 +1317,6 @@
     window.addEventListener('resize', updateBtns);
     updateBtns();
   });
-})();
-(function(){
-  // a smoky glow that drifts toward the mouse rather than snapping to it —
-  // skipped on touch-only devices.
-  if (!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches)) return;
-  var glow = document.getElementById('cursor-glow');
-  if (!glow) return;
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var tx = window.innerWidth / 2, ty = window.innerHeight / 2;
-  var cx = tx, cy = ty;
-  var started = false;
-
-  function move(e){
-    tx = e.clientX; ty = e.clientY;
-    glow.classList.add('show');
-    if (!started){
-      cx = tx; cy = ty;
-      started = true;
-      render();
-    }
-  }
-  window.addEventListener('mousemove', move, {passive:true});
-  window.addEventListener('mouseleave', function(){ glow.classList.remove('show'); });
-
-  function render(){
-    glow.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
-  }
-  function loop(){
-    if (started){
-      var lag = reduceMotion ? 1 : 0.06;
-      cx += (tx - cx) * lag;
-      cy += (ty - cy) * lag;
-      render();
-    }
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
 })();
 (function(){
   // low-poly animated mesh behind the whole page — triangulated plane, fixed
@@ -1742,267 +1566,27 @@
   update();
 })();
 (function(){
-  // chibi pixel avatar: big head (skin=accent), shirt (accent-2), pants (line-strong),
-  // outline (text), eyes (accent-ink — always contrasts against the head fill)
-  var PIXEL = [
-    ".2222222.",
-    "211111112",
-    "211111112",
-    "211511512",
-    "211111112",
-    ".2222222.",
-    ".2333332.",
-    "233333332",
-    "233333332",
-    ".2333332.",
-    ".222.222.",
-    ".444.444.",
-    ".444.444.",
-    ".222.222."
-  ];
-  var COLORS = {
-    '1':'var(--accent)',
-    '2':'var(--text)',
-    '3':'var(--accent-2)',
-    '4':'var(--line-strong)',
-    '5':'var(--accent-ink)'
-  };
-  var UNIT = 4;
-  var W = PIXEL[0].length * UNIT;
-  var H = PIXEL.length * UNIT;
-
-  function buildShadow(){
-    var shadows = [];
-    for (var r = 0; r < PIXEL.length; r++){
-      var row = PIXEL[r];
-      for (var c = 0; c < row.length; c++){
-        var ch = row[c];
-        if (ch === '.' || !COLORS[ch]) continue;
-        shadows.push((c*UNIT) + 'px ' + (r*UNIT) + 'px 0 ' + COLORS[ch]);
-      }
-    }
-    return shadows.join(',');
-  }
-
-  var sprite = document.getElementById('gdago-sprite');
-  var bubble = document.getElementById('gdago-bubble');
-  var idle = sprite ? sprite.querySelector('.idle') : null;
-  if (!sprite || !bubble || !idle) return;
-
-  sprite.style.width = W + 'px';
-  sprite.style.height = H + 'px';
-  idle.style.width = UNIT + 'px';
-  idle.style.height = UNIT + 'px';
-  idle.style.boxShadow = buildShadow();
-
-  var stops = Array.prototype.slice.call(document.querySelectorAll('.stop'));
-  if (!stops.length) return;
-
+  // every so often, at no fixed rhythm, one random card's hover border
+  // flashes on its own — a sign of life rather than a loop to notice.
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+  if (!panels.length) return;
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
 
-  var EDGE_PAD = 4; // feet rest right at a div's own top border, body standing outside/above it
-
-  var current = stops[0];
-  var phase = 'wander';           // 'wander' | 'travel'
-  var facing = 1;
-  var x = 0, y = 0, wDir = 1;
-  var wSpeed = 20;                 // px/s
-  var legs = null, legIdx = 0, legT0 = 0; // travel: queued {x0,y0,x1,y1,dur}
-  var pendingTarget = null;
-  var lastT = null;
-  var bubbleTimer = null;
-  var keys = { left:false, right:false };
-
-  function rand(min, max){ return min + Math.random() * (max - min); }
-  function easeInOutQuad(t){ return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
-
-  // All stops that currently sit in the same visual row as el (same top, responsive —
-  // recomputed live so it tracks reflow/column-wrapping), walked as one continuous lane.
-  function laneBounds(el){
-    var r0 = el.getBoundingClientRect();
-    var top = r0.top;
-    var minX = Infinity, maxX = -Infinity;
-    stops.forEach(function(s){
-      var r = s.getBoundingClientRect();
-      if (Math.abs(r.top - top) < 10){
-        minX = Math.min(minX, r.left);
-        maxX = Math.max(maxX, r.right);
+  function scheduleFlicker(){
+    var delay = 7000 + Math.random() * 21000; // 7–28s, deliberately irregular
+    setTimeout(function(){
+      var panel = panels[Math.floor(Math.random() * panels.length)];
+      if (!panel.matches(':hover')){
+        panel.classList.add('flicker');
+        panel.addEventListener('animationend', function done(){
+          panel.classList.remove('flicker');
+          panel.removeEventListener('animationend', done);
+        });
       }
-    });
-    var innerTop = top - H - EDGE_PAD;
-    var safeMinX = minX + 8, safeMaxX = maxX - W - 8;
-    if (safeMaxX < safeMinX){ safeMinX = safeMaxX = (minX + maxX) / 2 - W / 2; }
-    return { top: innerTop, minX: safeMinX, maxX: safeMaxX };
+      scheduleFlicker();
+    }, delay);
   }
-
-  // a left-edge rail, valid across every lane (they all share the .wrap column),
-  // used to climb from one row's edge down/up to the next — never rising above a div.
-  function railX(){
-    var wr = document.querySelector('.wrap').getBoundingClientRect();
-    return wr.left + 14;
-  }
-
-  function render(){
-    sprite.style.left = x + 'px';
-    sprite.style.top = y + 'px';
-    sprite.style.transform = 'scaleX(' + facing + ')';
-
-    var bw = bubble.offsetWidth || 160;
-    var rightX = x + W + 12;
-    var bx = (rightX + bw <= window.innerWidth - 8) ? rightX : Math.max(8, x - bw - 12);
-    var by = Math.max(8, y);
-    bubble.style.left = bx + 'px';
-    bubble.style.top = by + 'px';
-  }
-
-  function showBubble(text, autohideMs){
-    bubble.textContent = text;
-    bubble.classList.add('show');
-    render();
-    clearTimeout(bubbleTimer);
-    if (autohideMs){ bubbleTimer = setTimeout(hideBubble, autohideMs); }
-  }
-  function hideBubble(){ bubble.classList.remove('show'); }
-
-  function pickStop(exclude){
-    var visible = stops.filter(function(s){
-      if (s === exclude) return false;
-      var r = s.getBoundingClientRect();
-      return r.bottom > 0 && r.top < window.innerHeight;
-    });
-    var pool = visible.length ? visible : stops.filter(function(s){ return s !== exclude; });
-    return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
-  }
-
-  // walk to a rail edge, climb straight down/up it, walk to the target spot —
-  // every leg stays inside a div's own bounds, so he's never above/outside one.
-  // triggered only by the player (space bar) — no autonomous roaming anymore.
-  function startTravel(){
-    if (phase !== 'wander') return;
-    var target = pickStop(current);
-    if (!target) return;
-    var fromLane = laneBounds(current);
-    var toLane = laneBounds(target);
-    var rx = Math.min(Math.max(railX(), toLane.minX), toLane.maxX);
-    var rx0 = Math.min(Math.max(rx, fromLane.minX), fromLane.maxX);
-    var tx = rand(toLane.minX, toLane.maxX);
-
-    var falling = toLane.top > fromLane.top; // moving to a lower platform
-
-    legs = [
-      { type:'walk', x0:x, y0:y, x1:rx0, y1:fromLane.top },
-      { type:'vertical', fall:falling, x0:rx0, y0:fromLane.top, x1:rx, y1:toLane.top },
-      { type:'walk', x0:rx, y0:toLane.top, x1:tx, y1:toLane.top }
-    ].filter(function(l){ return Math.abs(l.x1-l.x0) > 2 || Math.abs(l.y1-l.y0) > 2; });
-
-    if (!legs.length) return;
-
-    legs.forEach(function(l){
-      var dist = Math.abs(l.x1 - l.x0) + Math.abs(l.y1 - l.y0);
-      l.dur = reduceMotion ? 1 : Math.max(220, Math.min(650, dist * 5));
-    });
-
-    // fell onto a lower platform — grab the edge and hang for a beat before
-    // walking on, instead of sliding straight past it.
-    if (!reduceMotion){
-      var fallLegIdx = -1;
-      legs.forEach(function(l, i){ if (l.type === 'vertical' && l.fall) fallLegIdx = i; });
-      if (fallLegIdx !== -1){
-        var fl = legs[fallLegIdx];
-        legs.splice(fallLegIdx + 1, 0, { type:'hang', x0:fl.x1, y0:fl.y1, x1:fl.x1, y1:fl.y1, dur:380 });
-      }
-    }
-
-    legIdx = 0;
-    legT0 = performance.now();
-    pendingTarget = target;
-    hideBubble();
-    sprite.classList.add('jumping');
-    phase = 'travel';
-  }
-
-  function land(){
-    current = pendingTarget;
-    legs = null; pendingTarget = null;
-    wDir = Math.random() < 0.5 ? -1 : 1;
-    sprite.classList.remove('jumping');
-    sprite.classList.remove('hanging');
-    phase = 'wander';
-    showBubble(current.getAttribute('data-line') || '', 3500);
-  }
-
-  function tick(now){
-    if (lastT === null) lastT = now;
-    lastT = now;
-
-    if (phase === 'wander'){
-      var b = laneBounds(current);
-      if (!reduceMotion){
-        var dt = Math.min(0.05, (now - (tick.prevT || now)) / 1000);
-        var manualDir = (keys.left && !keys.right) ? -1 : ((keys.right && !keys.left) ? 1 : 0);
-        if (manualDir !== 0){
-          x += manualDir * wSpeed * 2.2 * dt;
-          facing = manualDir;
-          wDir = manualDir;
-          x = Math.min(Math.max(x, b.minX), b.maxX);
-        } else {
-          x += wDir * wSpeed * dt;
-          if (x > b.maxX){ x = b.maxX; wDir = -1; facing = -1; }
-          if (x < b.minX){ x = b.minX; wDir = 1; facing = 1; }
-        }
-      } else {
-        x = Math.min(Math.max(x, b.minX), b.maxX);
-      }
-      y = b.top;
-    } else if (phase === 'travel'){
-      if (reduceMotion){
-        land();
-      } else {
-        var leg = legs[legIdx];
-        var dx = leg.x1 - leg.x0;
-        if (Math.abs(dx) > 4) facing = dx < 0 ? -1 : 1;
-        var t = Math.min(1, (now - legT0) / leg.dur);
-        var e = leg.fall ? (t * t) : easeInOutQuad(t);
-        x = leg.x0 + dx * e;
-        y = leg.y0 + (leg.y1 - leg.y0) * e;
-        sprite.classList.toggle('hanging', leg.type === 'hang');
-        if (t >= 1){
-          legIdx++;
-          legT0 = now;
-          if (legIdx >= legs.length){ land(); }
-        }
-      }
-    }
-
-    tick.prevT = now;
-    render();
-    requestAnimationFrame(tick);
-  }
-
-  var INTERACTIVE_TAGS = /^(A|BUTTON|INPUT|TEXTAREA|SELECT)$/;
-  window.addEventListener('keydown', function(e){
-    if (document.activeElement && INTERACTIVE_TAGS.test(document.activeElement.tagName)) return;
-    var k = e.key.toLowerCase();
-    if (k === 'arrowleft' || k === 'a'){
-      keys.left = true; e.preventDefault();
-    } else if (k === 'arrowright' || k === 'd'){
-      keys.right = true; e.preventDefault();
-    } else if ((e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar' || k === 'w' || k === 'arrowup') && !e.repeat){
-      e.preventDefault();
-      startTravel();
-    }
-  });
-  window.addEventListener('keyup', function(e){
-    var k = e.key.toLowerCase();
-    if (k === 'arrowleft' || k === 'a') keys.left = false;
-    if (k === 'arrowright' || k === 'd') keys.right = false;
-  });
-
-  var b0 = laneBounds(current);
-  x = (b0.minX + b0.maxX) / 2;
-  y = b0.top;
-  render();
-  setTimeout(function(){ showBubble(current.getAttribute('data-line') || '', 3500); }, 900);
-  requestAnimationFrame(tick);
+  scheduleFlicker();
 })();
 </script>
