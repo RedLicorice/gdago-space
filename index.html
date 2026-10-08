@@ -7,16 +7,16 @@
 <link id="favicon" rel="icon" type="image/png">
 <style>
   :root{
-    --bg:#150f2a;
-    --surface:#1d1638;
-    --surface-2:#261d47;
+    --bg:#160c29;
+    --surface:#231240;
+    --surface-2:#2e194f;
     --text:#eef1ea;
-    --text-muted:#9b97b5;
+    --text-muted:#a598c3;
     --accent:#5eead4;
     --accent-ink:#06201c;
     --accent-2:#2fdcc9;
-    --line:#2f2a4a;
-    --line-strong:#423a63;
+    --line:#3b245b;
+    --line-strong:#623f8d;
     --shadow: 0 1px 0 rgba(0,0,0,.4);
     --shift-echo:#ff5d7a;
     --tag-green:#3ddc97;
@@ -52,16 +52,16 @@
     --tag-green:#178a5e;
   }
   :root[data-theme="dark"]{
-    --bg:#150f2a;
-    --surface:#1d1638;
-    --surface-2:#261d47;
+    --bg:#160c29;
+    --surface:#231240;
+    --surface-2:#2e194f;
     --text:#eef1ea;
-    --text-muted:#9b97b5;
+    --text-muted:#a598c3;
     --accent:#5eead4;
     --accent-ink:#06201c;
     --accent-2:#2fdcc9;
-    --line:#2f2a4a;
-    --line-strong:#423a63;
+    --line:#3b245b;
+    --line-strong:#623f8d;
     --shadow: 0 1px 0 rgba(0,0,0,.4);
     --tag-green:#3ddc97;
   }
@@ -1501,27 +1501,28 @@
 
   var TOKENS = ['--bg','--surface','--surface-2','--text','--text-muted',
                 '--accent','--accent-ink','--accent-2','--line','--line-strong'];
-  // three stops along the scroll: violet at the very top, blue once you're
-  // into the games/projects content, then the shift's own coral/violet.
-  var VIOLET = {
-    '--bg':[21,15,42],        '--surface':[29,22,56],     '--surface-2':[38,29,71],
-    '--text':[238,241,234],   '--text-muted':[155,151,181],
+  // three stops along the scroll, each darker than before: purple at the
+  // very top, blue once you're into the games/projects content, then the
+  // shift's own deep coral/violet as its section arrives.
+  var PURPLE = {
+    '--bg':[22,12,41],        '--surface':[35,18,64],     '--surface-2':[46,25,79],
+    '--text':[238,241,234],   '--text-muted':[165,152,195],
     '--accent':[94,234,212],  '--accent-ink':[6,32,28],   '--accent-2':[47,220,201],
-    '--line':[47,42,74],      '--line-strong':[66,58,99]
+    '--line':[59,36,91],      '--line-strong':[98,63,141]
   };
   var BLUE = {
-    '--bg':[14,20,32],        '--surface':[20,27,41],     '--surface-2':[27,36,53],
+    '--bg':[11,16,26],        '--surface':[16,22,33],     '--surface-2':[22,29,42],
     '--text':[238,241,234],   '--text-muted':[147,160,181],
     '--accent':[94,234,212],  '--accent-ink':[6,32,28],   '--accent-2':[47,220,201],
-    '--line':[42,52,71],      '--line-strong':[60,74,99]
+    '--line':[36,44,60],      '--line-strong':[51,63,84]
   };
   var SHIFT = {
-    '--bg':[28,15,51],        '--surface':[44,23,80],     '--surface-2':[58,31,99],
+    '--bg':[24,13,43],        '--surface':[37,20,68],     '--surface-2':[49,26,84],
     '--text':[246,238,255],   '--text-muted':[217,198,239],
     '--accent':[255,93,122],  '--accent-ink':[42,15,31],  '--accent-2':[67,230,201],
-    '--line':[74,45,114],     '--line-strong':[122,79,176]
+    '--line':[63,38,97],      '--line-strong':[104,67,150]
   };
-  var MAIN_FADE_PX = 900; // scroll distance over which violet settles to blue
+  var MAIN_FADE_PX = 900; // scroll distance over which purple settles to blue
 
   function mix(a, b, p){
     return 'rgb(' + Math.round(a[0]+(b[0]-a[0])*p) + ','
@@ -1541,7 +1542,7 @@
       ? (r.top <= window.innerHeight * 0.55 ? 1 : 0)
       : Math.max(0, Math.min(1, 1 - (r.top / window.innerHeight)));
     TOKENS.forEach(function(t){
-      var base = mixRgb(VIOLET[t], BLUE[t], pMain);
+      var base = mixRgb(PURPLE[t], BLUE[t], pMain);
       root.style.setProperty(t, mix(base, SHIFT[t], p));
     });
 
