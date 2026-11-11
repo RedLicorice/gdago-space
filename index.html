@@ -594,70 +594,12 @@
   }
   .play::after{content:"→";transition:transform .15s ease;}
   .panel:hover .play::after{transform:translateX(4px);}
-  .panel.wip{opacity:.78;}
-  .panel.wip .play,
   .panel.private .play{color:var(--text-muted);cursor:default;}
-  .panel.wip .play::after{content:"⋯";}
   .panel.private .play::after{content:"●";font-size:.6rem;}
   @media (max-width:900px){ .panel{flex-basis:320px;} }
   @media (max-width:560px){ .panel{flex-basis:84%;} }
-  .hazard{
-    position:absolute;inset:0 0 auto 0;height:5px;
-    background:repeating-linear-gradient(135deg,var(--accent) 0 10px,transparent 10px 20px);
-    opacity:.5;
-  }
-
-  /* ---------- underneath (expandable) ---------- */
-  .underneath{
-    margin-top:1px;
-    border:1px solid var(--line);
-    background:var(--surface);
-  }
-  .underneath summary{
-    list-style:none;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:16px 22px;
-    user-select:none;
-  }
-  .underneath summary::-webkit-details-marker{display:none;}
-  .underneath-mark{
-    font-family:'Spline Sans Mono',monospace;
-    width:16px;height:16px;
-    display:inline-flex;align-items:center;justify-content:center;
-    border:1px solid var(--line-strong);
-    font-size:.85rem;
-    flex:none;
-    transition:transform .15s ease;
-  }
-  .underneath[open] .underneath-mark{transform:rotate(45deg);}
-  .underneath summary:hover .eyebrow{color:var(--accent);}
-  .underneath-body{
-    padding:4px 22px 26px;
-    display:grid;
-    grid-template-columns:1.1fr 1fr;
-    gap:30px;
-    align-items:center;
-  }
-  @media (max-width:760px){.underneath-body{grid-template-columns:1fr;}}
-  .underneath-body p{color:var(--text-muted);max-width:52ch;margin:0;}
-  .diagram{border:1px solid var(--line);background:var(--surface-2);padding:10px;}
-  .diagram svg{display:block;width:100%;height:auto;}
-  .diagram text{font-family:'Spline Sans Mono',monospace;}
-  .node-label{fill:var(--text);font-size:11px;}
-  .node-sub{fill:var(--text-muted);font-size:9px;}
-  .trace{fill:none;stroke:var(--line-strong);stroke-width:1.4;}
-  .trace.live{stroke:var(--accent-2);stroke-dasharray:4 4;animation:dash 6s linear infinite;}
-  @media (prefers-reduced-motion:reduce){.trace.live{animation:none;}}
-  @keyframes dash{to{stroke-dashoffset:-80;}}
-  .node-box{fill:var(--surface-2);stroke:var(--line-strong);stroke-width:1.2;}
-  .node-box.accent{stroke:var(--accent-2);}
-  .node-box.dim{fill:transparent;stroke-dasharray:3 3;}
-
-  /* ---------- day job: the other shift — grows into a fixed wall as you scroll in ---------- */
-  .other-shift{
+  /* ---------- the vision — grows into a fixed wall as you scroll in ---------- */
+  .vision{
     position:relative;
     width:100vw;
     margin-left:calc(50% - 50vw);
@@ -665,7 +607,7 @@
     padding-block:132px 96px;
     color:#f5eeff;
   }
-  .other-shift::before{
+  .vision::before{
     content:"";
     position:fixed;
     inset:0;
@@ -678,14 +620,14 @@
     clip-path:polygon(0 calc(var(--wall-top, 100vh) + var(--wall-tilt, 84px)),
                        100% var(--wall-top, 100vh), 100% 100%, 0 100%);
   }
-  .other-shift-inner{
+  .vision-inner{
     max-width:1080px;
     margin-inline:auto;
     padding-inline:clamp(20px,5vw,64px);
   }
-  .other-shift .section-head p{color:#ddc9f2;}
-  .other-shift h2{color:#fff;}
-  .other-shift .eyebrow{color:#7df0da;}
+  .vision .section-head p{color:#ddc9f2;}
+  .vision h2{color:#fff;}
+  .vision .eyebrow{color:#7df0da;}
 
   .case{
     border:1px solid rgba(255,255,255,.28);
@@ -734,17 +676,6 @@
   }
   .contact:hover{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
   .contact:hover .contact-label{color:var(--accent-ink);}
-  .legend{
-    margin-top:44px;
-    display:flex;gap:24px;flex-wrap:wrap;
-    font-family:'Spline Sans Mono',monospace;
-    font-size:.72rem;
-    color:var(--text-muted);
-    border-top:1px dashed color-mix(in srgb, var(--accent-2) 55%, var(--line));
-    padding-top:18px;
-  }
-  .legend b{color:var(--text-muted);}
-
 
 </style>
 
@@ -757,8 +688,8 @@
     <a class="topbar-logo" href="#"><em>g</em>dago</a>
     <div class="topbar-links">
       <a href="#builds" data-i18n="nav.projects">projects</a>
-      <a href="#games" data-i18n="nav.games">games</a>
-      <a href="#dayjob" data-i18n="nav.shift">the shift</a>
+      <a href="#games" data-i18n="nav.games">play</a>
+      <a href="#vision" data-i18n="nav.vision">the vision</a>
       <a href="#hello" data-i18n="nav.hi">say hi</a>
     </div>
     <button class="lang-toggle" id="lang-toggle" type="button">IT</button>
@@ -767,8 +698,8 @@
     </button>
     <div class="topbar-dropdown" id="topbar-dropdown">
       <a href="#builds" data-i18n="nav.projects">projects</a>
-      <a href="#games" data-i18n="nav.games">games</a>
-      <a href="#dayjob" data-i18n="nav.shift">the shift</a>
+      <a href="#games" data-i18n="nav.games">play</a>
+      <a href="#vision" data-i18n="nav.vision">the vision</a>
       <a href="#hello" data-i18n="nav.hi">say hi</a>
     </div>
   </div>
@@ -799,7 +730,7 @@
   <section id="builds">
     <div class="section-head">
       <h2 data-i18n="builds.title">Built from scratch</h2>
-      <p data-i18n="builds.desc">Three systems built because the off-the-shelf version was too slow, too rigid, or didn't exist.
+      <p data-i18n="builds.desc">Four systems built because the off-the-shelf version was too slow, too rigid, or didn't exist.
         Not demos — still running.</p>
     </div>
     <div class="panel-grid">
@@ -847,13 +778,29 @@
         <span class="play" data-i18n="status.runningNotPublic">running, not public</span>
       </div>
 
+      <a class="panel" href="https://quizzer.gdago.space" target="_blank" rel="noopener">
+        <span class="corner"></span>
+        <h3>Quizzer</h3>
+        <div class="tag-row">
+          <span class="tag">PWA</span>
+          <span class="tag">offline</span>
+          <span class="tag">exam sim</span>
+          <span class="tag">react</span>
+        </div>
+        <p data-i18n="quizzer.desc">A study app I built to teach myself. Exam simulations, practice mode and flashcards,
+          installable and fully offline. It imports Directrev-format <span class="mono">.md</span> datasets for
+          free. Private datasets (MuleSoft Developer 1, AWS DVA-C02) are available on request. Made to learn,
+          kept because it works.</p>
+        <span class="play" data-i18n="status.openIt">open it</span>
+      </a>
+
     </div>
   </section>
 
   <section id="games">
     <div class="section-head">
-      <h2 data-i18n="games.title">Worlds shipped</h2>
-      <p data-i18n="games.desc">Three games, one backend. Click through — they're live, not screenshots.</p>
+      <h2 data-i18n="games.title">Playgrounds</h2>
+      <p data-i18n="games.desc">Click through — they're live, not screenshots.</p>
     </div>
     <div class="panel-grid">
 
@@ -884,90 +831,39 @@
         <span class="play" data-i18n="status.playIt">play it</span>
       </a>
 
-      <div class="panel wip">
-        <span class="hazard"></span>
+      <a class="panel" href="https://taperun.gdago.space" target="_blank" rel="noopener">
         <span class="corner"></span>
-        <h3>RetroStrike</h3>
+        <h3>TAPE//RUN</h3>
         <div class="tag-row">
-          <span class="tag">PS2-era FPS</span>
-          <span class="tag">WebRTC P2P</span>
-          <span class="tag">WIP</span>
+          <span class="tag">paper trading</span>
+          <span class="tag">learn by doing</span>
+          <span class="tag">agent-ready</span>
         </div>
-        <p data-i18n="retrostrike.desc">A procedural CQB arena and a sprawling procedural city. Babylon.js, serverless peer-to-peer,
-          host-authoritative, bots fill the empty slots. No server — still in the forge.</p>
-        <span class="play" data-i18n="status.inDevelopment">in development</span>
-      </div>
+        <p data-i18n="taperun.desc">Paper trading that behaves like the real thing. I built it to learn trading by doing:
+          operations modelled on live markets, no real money at risk. As a pure game it's weak, and that's
+          the point. It's a learning tool, which is also why AI agents can plug in and coach a round.</p>
+        <span class="play" data-i18n="status.tryIt">try it</span>
+      </a>
 
     </div>
-
-    <details class="underneath">
-      <summary>
-        <span class="underneath-mark" aria-hidden="true">+</span>
-        <span class="eyebrow" data-i18n="underneath.label">What's underneath</span>
-      </summary>
-      <div class="underneath-body">
-        <p data-i18n="underneath.body">
-          All three run on <strong style="color:var(--text)">apps-platform</strong>: who the player is,
-          where their save lives, how the browser hears about it. One account, every game — sign up once
-          and it works in Il Porciotto, Crown Rush, whatever's next. It also runs anywhere — my laptop, a
-          cloud cluster, a home server under the desk, in principle a toaster with enough RAM — without
-          rewriting auth or storage each time. Postgres, Firestore, Redis, Google Pub/Sub, or just memory,
-          picked by environment variable, not by rewrite.
-        </p>
-        <div class="diagram">
-          <svg viewBox="0 0 400 240" role="img" aria-label="apps-platform architecture: three game clients connect through a gateway to a shared platform backing three storage options">
-            <path class="trace" d="M60 40 L140 80"></path>
-            <path class="trace" d="M200 40 L160 80"></path>
-            <path class="trace" d="M340 40 L220 80"></path>
-            <rect class="node-box" x="20" y="18" width="80" height="26" rx="2"></rect>
-            <text class="node-label" x="60" y="35" text-anchor="middle">web client</text>
-            <rect class="node-box" x="160" y="18" width="80" height="26" rx="2"></rect>
-            <text class="node-label" x="200" y="35" text-anchor="middle">web client</text>
-            <rect class="node-box" x="300" y="18" width="80" height="26" rx="2"></rect>
-            <text class="node-label" x="340" y="35" text-anchor="middle">web client</text>
-
-            <rect class="node-box accent" x="130" y="80" width="140" height="30" rx="2"></rect>
-            <text class="node-label" x="200" y="99" text-anchor="middle">gateway — accounts · rooms</text>
-
-            <path class="trace live" d="M200 110 L200 150"></path>
-            <rect class="node-box accent" x="90" y="150" width="220" height="32" rx="2"></rect>
-            <text class="node-label" x="200" y="170" text-anchor="middle">@redlicorice/apps-platform</text>
-
-            <path class="trace" d="M140 182 L90 215"></path>
-            <path class="trace" d="M175 182 L160 215"></path>
-            <path class="trace" d="M225 182 L240 215"></path>
-            <path class="trace" d="M260 182 L310 215"></path>
-
-            <rect class="node-box dim" x="55" y="215" width="70" height="20"></rect>
-            <text class="node-sub" x="90" y="228" text-anchor="middle">postgres</text>
-            <rect class="node-box dim" x="130" y="215" width="60" height="20"></rect>
-            <text class="node-sub" x="160" y="228" text-anchor="middle">redis</text>
-            <rect class="node-box dim" x="200" y="215" width="80" height="20"></rect>
-            <text class="node-sub" x="240" y="228" text-anchor="middle">firestore</text>
-            <rect class="node-box dim" x="285" y="215" width="70" height="20"></rect>
-            <text class="node-sub" x="320" y="228" text-anchor="middle">pub/sub</text>
-          </svg>
-        </div>
-      </div>
-    </details>
   </section>
 
 </div>
 
-<section id="dayjob" class="other-shift">
-  <div class="other-shift-inner">
+<section id="vision" class="vision">
+  <div class="vision-inner">
     <div class="section-head">
-      <h2 data-i18n="dayjob.title">The other shift</h2>
-      <p data-i18n="dayjob.desc">Five years of being called in after the room has already decided whose fault it is.</p>
+      <h2 data-i18n="vision.title">The Vision</h2>
+      <p data-i18n="vision.desc">Tech should adapt to people. Not the other way round.</p>
     </div>
     <div class="case">
-      <p class="field-note" data-i18n="dayjob.quote">"Most of the job is reading a system nobody fully remembers building, and
-        deciding what's actually true about it."</p>
-      <p data-i18n="dayjob.body">
-        TIBCO integrations for a multi-utility, systems built long before me, regulatory deadlines that
-        don't move for anyone. The technical part is rarely the hard part — the real work is owning the
-        decision end to end: propose it, defend it in the room, answer for it after. Specifics stay for
-        the interview.
+      <p class="field-note" data-i18n="vision.quote">"Nobody wakes up wanting to learn a new interface."</p>
+      <p data-i18n="vision.body">
+        Model the system on the human who lives with it: their habits, their rhythm, what they actually
+        care about. Not a cold, generic template. Apps, IoT devices, smart homes, business processes: the
+        rule is the same everywhere, they're all part of the interface. Be quiet when they're busy, be
+        there when they're not, and never ask them to read the manual first. Good technology augments a
+        life in natural, organic ways. Think houseplant, not dashboard: it grows toward you.
       </p>
     </div>
   </div>
@@ -989,12 +885,6 @@
         <span>recruiting@gdago.me</span>
       </a>
     </div>
-    <div class="legend">
-      <span><b data-i18n="legend.title">LEGEND</b></span>
-      <span data-i18n="legend.solid">— solid trace: in production</span>
-      <span data-i18n="legend.dashed">- - - dashed trace: in development</span>
-      <span data-i18n="legend.hazard">hazard stripe: WIP</span>
-    </div>
   </footer>
 
 </div>
@@ -1007,8 +897,8 @@
   // keeps the choice.
   var I18N = {
     'nav.projects': {en:'projects', it:'progetti'},
-    'nav.games': {en:'games', it:'giochi'},
-    'nav.shift': {en:'the shift', it:'il turno'},
+    'nav.games': {en:'play', it:'gioca'},
+    'nav.vision': {en:'the vision', it:'la visione'},
     'nav.hi': {en:'say hi', it:'scrivimi'},
     'burger.aria': {en:'Open menu', it:'Apri il menu'},
     'carousel.prev.aria': {en:'Scroll left', it:'Scorri a sinistra'},
@@ -1021,8 +911,8 @@
     },
     'builds.title': {en:'Built from scratch', it:'Costruito da zero'},
     'builds.desc': {
-      en:"Three systems built because the off-the-shelf version was too slow, too rigid, or didn't exist. Not demos — still running.",
-      it:"Tre sistemi nati perché la versione pronta all'uso era troppo lenta, troppo rigida, o non esisteva. Non demo — sono ancora in produzione."
+      en:"Four systems built because the off-the-shelf version was too slow, too rigid, or didn't exist. Not demos — still running.",
+      it:"Quattro sistemi nati perché la versione pronta all'uso era troppo lenta, troppo rigida, o non esisteva. Non demo — sono ancora in produzione."
     },
     'loghub.desc': {
       en:"Unifies server logs with the diagnostics a client agent collects on users' machines, in one timeline. Ships an MCP endpoint so a coding agent can read both live while it iterates — the thing that makes AI-assisted debugging verifiable instead of vibes.",
@@ -1036,11 +926,16 @@
       en:'OAuth2 with proactive refresh behind a swappable interface, OpenAPI REST surface, a C# desktop client. In production it ships a 2 GB+ client update in about two and a half minutes.',
       it:"OAuth2 con refresh proattivo dietro un'interfaccia intercambiabile, superficie REST OpenAPI, un client desktop in C#. In produzione distribuisce un aggiornamento client di oltre 2 GB in circa due minuti e mezzo."
     },
+    'quizzer.desc': {
+      en:'A study app I built to teach myself. Exam simulations, practice mode and flashcards, installable and fully offline. It imports Directrev-format <span class="mono">.md</span> datasets for free. Private datasets (MuleSoft Developer 1, AWS DVA-C02) are available on request. Made to learn, kept because it works.',
+      it:"Un'app di studio che ho costruito per insegnare a me stesso. Simulazioni d'esame, modalità pratica e flashcard, installabile e completamente offline. Importa gratis dataset <span class=\"mono\">.md</span> in formato Directrev. I dataset privati (MuleSoft Developer 1, AWS DVA-C02) sono disponibili su richiesta. Nata per imparare, tenuta perché funziona."
+    },
     'status.runningNotPublic': {en:'running, not public', it:'attivo, non pubblico'},
-    'games.title': {en:'Worlds shipped', it:'Mondi spediti'},
+    'status.openIt': {en:'open it', it:'aprila'},
+    'games.title': {en:'Playgrounds', it:'Campi da gioco'},
     'games.desc': {
-      en:"Three games, one backend. Click through — they're live, not screenshots.",
-      it:'Tre giochi, un solo backend. Clicca ed entra — sono live, non screenshot.'
+      en:"Click through — they're live, not screenshots.",
+      it:'Clicca ed entra — sono live, non screenshot.'
     },
     'porciotto.desc': {
       en:"A cooperative mushroom hunt in Calabria's Aspromonte forest. Learn your species from Luigi, cook for Memmo, dodge the wild boar — and the forest ranger. Three services sharing one set of rooms and accounts, live.",
@@ -1051,36 +946,27 @@
       it:'Build Fast, Kill Faster. Uno skirmish in stile Age of Empires che corre interamente nel browser — Three.js per il campo di battaglia, bot per quando non c\'è nessuno da razziare.'
     },
     'status.playIt': {en:'play it', it:'gioca'},
-    'retrostrike.desc': {
-      en:'A procedural CQB arena and a sprawling procedural city. Babylon.js, serverless peer-to-peer, host-authoritative, bots fill the empty slots. No server — still in the forge.',
-      it:"Un'arena CQB procedurale e una città procedurale che si estende a vista d'occhio. Babylon.js, peer-to-peer serverless, autorità all'host, i bot riempiono i posti vuoti. Nessun server — ancora nella fucina."
+    'status.tryIt': {en:'try it', it:'provalo'},
+    'taperun.desc': {
+      en:"Paper trading that behaves like the real thing. I built it to learn trading by doing: operations modelled on live markets, no real money at risk. As a pure game it's weak, and that's the point. It's a learning tool, which is also why AI agents can plug in and coach a round.",
+      it:"Paper trading che si comporta come quello vero. L'ho costruito per imparare il trading facendo: operazioni modellate sui mercati reali, nessun rischio di denaro vero. Come gioco puro è debole, ed è proprio questo il punto. È uno strumento per imparare, ed è anche per questo che gli agenti AI possono collegarsi e fare da coach in un round."
     },
-    'status.inDevelopment': {en:'in development', it:'in sviluppo'},
-    'underneath.label': {en:"What's underneath", it:"Cosa c'è sotto"},
-    'underneath.body': {
-      en:'All three run on <strong style="color:var(--text)">apps-platform</strong>: who the player is, where their save lives, how the browser hears about it. One account, every game — sign up once and it works in Il Porciotto, Crown Rush, whatever\'s next. It also runs anywhere — my laptop, a cloud cluster, a home server under the desk, in principle a toaster with enough RAM — without rewriting auth or storage each time. Postgres, Firestore, Redis, Google Pub/Sub, or just memory, picked by environment variable, not by rewrite.',
-      it:'Tutti e tre corrono su <strong style="color:var(--text)">apps-platform</strong>: chi è il giocatore, dove vive il suo salvataggio, come il browser ne viene informato. Un account, ogni gioco — ci si registra una volta e funziona in Il Porciotto, Crown Rush, in quello che viene dopo. Gira anche ovunque — il mio laptop, un cluster cloud, un server di casa sotto la scrivania, in teoria un tostapane con abbastanza RAM — senza riscrivere auth o storage ogni volta. Postgres, Firestore, Redis, Google Pub/Sub, o semplicemente memoria, scelti con una variabile d\'ambiente, non riscrivendo il codice.'
+    'vision.title': {en:'The Vision', it:'La visione'},
+    'vision.desc': {
+      en:'Tech should adapt to people. Not the other way round.',
+      it:'La tecnologia dovrebbe adattarsi alle persone. Non il contrario.'
     },
-    'dayjob.title': {en:'The other shift', it:"L'altro turno"},
-    'dayjob.desc': {
-      en:"Five years of being called in after the room has already decided whose fault it is.",
-      it:"Cinque anni passati a essere chiamato dopo che la stanza ha già deciso di chi è la colpa."
+    'vision.quote': {
+      en:'"Nobody wakes up wanting to learn a new interface."',
+      it:'"Nessuno si sveglia la mattina con la voglia di imparare una nuova interfaccia."'
     },
-    'dayjob.quote': {
-      en:'"Most of the job is reading a system nobody fully remembers building, and deciding what\'s actually true about it."',
-      it:'"Gran parte del lavoro è leggere un sistema che nessuno ricorda più del tutto di aver costruito, e decidere cosa è davvero vero su di esso."'
-    },
-    'dayjob.body': {
-      en:"TIBCO integrations for a multi-utility, systems built long before me, regulatory deadlines that don't move for anyone. The technical part is rarely the hard part — the real work is owning the decision end to end: propose it, defend it in the room, answer for it after. Specifics stay for the interview.",
-      it:"Integrazioni TIBCO per una multiutility, sistemi costruiti molto prima di me, scadenze regolatorie che non si muovono per nessuno. La parte tecnica raramente è quella difficile — il vero lavoro è possedere la decisione dall'inizio alla fine: proporla, difenderla nella stanza, risponderne dopo. I dettagli restano per il colloquio."
+    'vision.body': {
+      en:"Model the system on the human who lives with it: their habits, their rhythm, what they actually care about. Not a cold, generic template. Apps, IoT devices, smart homes, business processes: the rule is the same everywhere, they're all part of the interface. Be quiet when they're busy, be there when they're not, and never ask them to read the manual first. Good technology augments a life in natural, organic ways. Think houseplant, not dashboard: it grows toward you.",
+      it:"Modella il sistema sulla persona che ci vive insieme: le sue abitudini, il suo ritmo, ciò che le sta davvero a cuore. Non su un modello freddo e generico. App, dispositivi IoT, case smart, processi aziendali: la regola è la stessa ovunque, fanno tutti parte dell'interfaccia. Stai in silenzio quando sono occupati, fatti trovare quando non lo sono, e non chiedere mai di leggere prima il manuale. La buona tecnologia aumenta la vita in modo naturale e organico. Pensa a una pianta d'appartamento, non a una dashboard: cresce verso di te."
     },
     'footer.title': {en:'Say hello', it:'Scrivimi'},
     'footer.play': {en:'wanna play?', it:'vuoi giocare?'},
-    'footer.business': {en:'mean business?', it:'parliamo di lavoro?'},
-    'legend.title': {en:'LEGEND', it:'LEGENDA'},
-    'legend.solid': {en:'— solid trace: in production', it:'— linea continua: in produzione'},
-    'legend.dashed': {en:'- - - dashed trace: in development', it:'- - - linea tratteggiata: in sviluppo'},
-    'legend.hazard': {en:'hazard stripe: WIP', it:'strisce di pericolo: in corso'}
+    'footer.business': {en:'mean business?', it:'parliamo di lavoro?'}
   };
 
   var LANG_KEY = 'gdago-lang';
@@ -1500,19 +1386,19 @@
   }
 })();
 (function(){
-  // as "the other shift" rises up the page, its violet/magenta bleeds into every
+  // as "the vision" rises up the page, its violet/magenta bleeds into every
   // token on the page — footer included — in continuous proportion to scroll.
-  // scrolling back up drains it out again. the wall itself (.other-shift's own
+  // scrolling back up drains it out again. the wall itself (.vision's own
   // background) stays fixed; this only repaints the shared tokens around it.
-  var dayjob = document.getElementById('dayjob');
-  if (!dayjob) return;
+  var vision = document.getElementById('vision');
+  if (!vision) return;
   var root = document.documentElement;
 
   var TOKENS = ['--bg','--surface','--surface-2','--text','--text-muted',
                 '--accent','--accent-ink','--accent-2','--line','--line-strong'];
   // three stops along the scroll, each darker than before: purple at the
   // very top, blue once you're into the games/projects content, then the
-  // shift's own deep coral/violet as its section arrives.
+  // vision's own deep coral/violet as its section arrives.
   // bg is desaturated ~80% toward neutral charcoal — nearly colorless — so
   // the still-saturated surface/line tones (the cards) read as a clear pop
   // of color against it, instead of everything sharing one tinted dark hue.
@@ -1528,7 +1414,7 @@
     '--accent':[94,234,212],  '--accent-ink':[6,32,28],   '--accent-2':[47,220,201],
     '--line':[24,30,42],      '--line-strong':[36,45,60]
   };
-  var SHIFT = {
+  var VISION = {
     '--bg':[15,14,18],        '--surface':[22,11,40],     '--surface-2':[30,15,50],
     '--text':[246,238,255],   '--text-muted':[217,198,239],
     '--accent':[255,93,122],  '--accent-ink':[42,15,31],  '--accent-2':[67,230,201],
@@ -1542,7 +1428,7 @@
   var MESH_TOKENS = ['--mesh-1','--mesh-2','--mesh-3','--mesh-4'];
   var MESH_PURPLE = { '--mesh-1':[6,3,11],  '--mesh-2':[11,6,20],  '--mesh-3':[16,10,29], '--mesh-4':[22,15,38] };
   var MESH_BLUE   = { '--mesh-1':[5,6,10],  '--mesh-2':[9,11,18],  '--mesh-3':[13,16,26], '--mesh-4':[18,22,34] };
-  var MESH_SHIFT  = { '--mesh-1':[8,4,14],  '--mesh-2':[14,8,24],  '--mesh-3':[20,12,34], '--mesh-4':[27,17,44] };
+  var MESH_VISION = { '--mesh-1':[8,4,14],  '--mesh-2':[14,8,24],  '--mesh-3':[20,12,34], '--mesh-4':[27,17,44] };
 
   var MAIN_FADE_PX = 900; // scroll distance over which purple settles to blue
 
@@ -1559,17 +1445,17 @@
   var ticking = false;
   function update(){
     var pMain = reduceMotion ? 1 : Math.max(0, Math.min(1, window.scrollY / MAIN_FADE_PX));
-    var r = dayjob.getBoundingClientRect();
+    var r = vision.getBoundingClientRect();
     var p = reduceMotion
       ? (r.top <= window.innerHeight * 0.55 ? 1 : 0)
       : Math.max(0, Math.min(1, 1 - (r.top / window.innerHeight)));
     TOKENS.forEach(function(t){
       var base = mixRgb(PURPLE[t], BLUE[t], pMain);
-      root.style.setProperty(t, mix(base, SHIFT[t], p));
+      root.style.setProperty(t, mix(base, VISION[t], p));
     });
     MESH_TOKENS.forEach(function(t){
       var base = mixRgb(MESH_PURPLE[t], MESH_BLUE[t], pMain);
-      root.style.setProperty(t, mix(base, MESH_SHIFT[t], p));
+      root.style.setProperty(t, mix(base, MESH_VISION[t], p));
     });
 
     // the wall's own diagonal seam (its ::before), grown from "right at the
@@ -1578,8 +1464,8 @@
     var vh = window.innerHeight;
     var seamTop = vh * (1 - p);
     var topY = seamTop * (1 - p);
-    dayjob.style.setProperty('--wall-top', topY + 'px');
-    dayjob.style.setProperty('--wall-tilt', Math.min(84, vh * 0.08) + 'px');
+    vision.style.setProperty('--wall-top', topY + 'px');
+    vision.style.setProperty('--wall-tilt', Math.min(84, vh * 0.08) + 'px');
 
     ticking = false;
   }
