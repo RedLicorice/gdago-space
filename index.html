@@ -1,6 +1,12 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>gdago</title>
+<script>
+// iOS Safari ignores user-scalable=no; block its pinch gesture explicitly
+['gesturestart','gesturechange','gestureend'].forEach(function(t){
+  document.addEventListener(t, function(e){ e.preventDefault(); });
+});
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -75,7 +81,18 @@
   }
   *{box-sizing:border-box;}
 
-  html{color-scheme:light dark; scroll-behavior:smooth;}
+  html{
+    color-scheme:light dark; scroll-behavior:smooth;
+    /* no sideways drag of the whole page (iOS rubber-bands 100vw sections), no pinch-zoom */
+    overflow-x:hidden;
+    overscroll-behavior-x:none;
+    touch-action:pan-y;
+    -webkit-tap-highlight-color:transparent;
+    -webkit-text-size-adjust:100%;
+  }
+  body{overflow-x:clip;}
+  /* the carousels scroll sideways themselves */
+  .panel-grid{touch-action:pan-x pan-y;}
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
   }
