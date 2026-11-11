@@ -18,7 +18,11 @@
 	<span class="play"><T v={project.status} /></span>
 {/snippet}
 
-{#if project.href}
+{#if project.product}
+	<a class="panel" href="/{project.slug}/" use:flickerable>
+		{@render body()}
+	</a>
+{:else if project.href}
 	<a class="panel" href={project.href} target="_blank" rel="noopener" use:flickerable>
 		{@render body()}
 	</a>

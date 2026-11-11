@@ -1,12 +1,13 @@
 import type { Bi, Project } from './types';
+import { quizzer } from './products/quizzer';
 
 const bi = (en: string, it: string): Bi => ({ en, it });
 
 const status = {
 	runningNotPublic: bi('running, not public', 'attivo, non pubblico'),
-	openIt: bi('open it', 'aprila'),
 	playIt: bi('play it', 'gioca'),
-	tryIt: bi('try it', 'provalo')
+	tryIt: bi('try it', 'provalo'),
+	seeMore: bi('see more', 'scopri')
 };
 
 /** "Built from scratch" */
@@ -20,7 +21,8 @@ export const builds: Project[] = [
 			'A study app I built to teach myself. Exam simulations, practice mode and flashcards, installable and fully offline. It imports Directrev-format <span class="mono">.md</span> datasets for free. Private datasets (MuleSoft Developer 1, AWS DVA-C02) are available on request. Made to learn, kept because it works.',
 			"Un'app di studio che ho costruito per insegnare a me stesso. Simulazioni d'esame, modalità pratica e flashcard, installabile e completamente offline. Importa gratis dataset <span class=\"mono\">.md</span> in formato Directrev. I dataset privati (MuleSoft Developer 1, AWS DVA-C02) sono disponibili su richiesta. Nata per imparare, tenuta perché funziona."
 		),
-		status: status.openIt
+		status: status.seeMore,
+		product: quizzer
 	},
 	{
 		slug: 'gogitit',
@@ -90,3 +92,5 @@ export const playgrounds: Project[] = [
 		status: status.tryIt
 	}
 ];
+
+export const allProjects: Project[] = [...builds, ...playgrounds];

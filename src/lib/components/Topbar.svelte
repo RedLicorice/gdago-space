@@ -5,10 +5,10 @@
 	import { i18n, toggleLang } from '#lib/i18n.svelte.ts';
 
 	const links = [
-		{ href: '#builds', label: copy.nav.projects },
-		{ href: '#games', label: copy.nav.games },
-		{ href: '#vision', label: copy.nav.vision },
-		{ href: '#hello', label: copy.nav.hi }
+		{ href: '/#builds', label: copy.nav.projects },
+		{ href: '/#games', label: copy.nav.games },
+		{ href: '/#vision', label: copy.nav.vision },
+		{ href: '/#hello', label: copy.nav.hi }
 	];
 
 	let open = $state(false);

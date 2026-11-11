@@ -53,6 +53,10 @@ export const copy = {
 			"Modella il sistema sulla persona che ci vive insieme: le sue abitudini, il suo ritmo, ciò che le sta davvero a cuore. Non su un modello freddo e generico. App, dispositivi IoT, case smart, processi aziendali: la regola è la stessa ovunque, fanno tutti parte dell'interfaccia. Stai in silenzio quando sono occupati, fatti trovare quando non lo sono, e non chiedere mai di leggere prima il manuale. La buona tecnologia aumenta la vita in modo naturale e organico. Pensa a una pianta d'appartamento, non a una dashboard: cresce verso di te."
 		)
 	},
+	product: {
+		back: bi('all projects', 'tutti i progetti'),
+		soon: bi('screenshot soon', 'screenshot in arrivo')
+	},
 	footer: {
 		title: bi('Say hello', 'Scrivimi'),
 		play: bi('wanna play?', 'vuoi giocare?'),

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Topbar from '#lib/components/Topbar.svelte';
 	import Spine from '#lib/components/Spine.svelte';
 	import Hero from '#lib/components/Hero.svelte';
 	import Section from '#lib/components/Section.svelte';
@@ -23,7 +22,6 @@
 	/>
 </svelte:head>
 
-<Topbar />
 <Spine />
 
 <div class="wrap">

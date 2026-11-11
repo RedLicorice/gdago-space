@@ -87,3 +87,10 @@ export function startScrollTheme(vision: HTMLElement): () => void {
 		window.removeEventListener('resize', onScroll);
 	};
 }
+
+/** Pin the tokens to the calm "blue" stop, for pages without the scroll-driven theme. */
+export function applyStaticTheme() {
+	const root = document.documentElement;
+	for (const t of TOKENS) root.style.setProperty(t, css(BLUE[t]));
+	for (const t of MESH_TOKENS) root.style.setProperty(t, css(MESH_BLUE[t]));
+}
