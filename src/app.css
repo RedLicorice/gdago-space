@@ -1,0 +1,233 @@
+:root {
+	--bg: #0b0a0c;
+	--surface: #120920;
+	--surface-2: #190d2b;
+	--text: #eef1ea;
+	--text-muted: #a598c3;
+	--accent: #5eead4;
+	--accent-ink: #06201c;
+	--accent-2: #2fdcc9;
+	--line: #28163e;
+	--line-strong: #422862;
+	--mesh-1: #06030b;
+	--mesh-2: #0b0614;
+	--mesh-3: #100a1d;
+	--mesh-4: #160f26;
+	--shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+	--shift-echo: #ff5d7a;
+	--tag-green: #3ddc97;
+}
+@media (prefers-color-scheme: light) {
+	:root:not([data-theme='dark']) {
+		--bg: #eef0ea;
+		--surface: #ffffff;
+		--surface-2: #e3e6de;
+		--text: #161b22;
+		--text-muted: #525c6b;
+		--accent: #0e7d72;
+		--accent-ink: #f4fffd;
+		--accent-2: #0a9385;
+		--line: #c9cdc1;
+		--line-strong: #aab0a1;
+		--shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+		--tag-green: #178a5e;
+	}
+}
+:root[data-theme='light'] {
+	--bg: #eef0ea;
+	--surface: #ffffff;
+	--surface-2: #e3e6de;
+	--text: #161b22;
+	--text-muted: #525c6b;
+	--accent: #0e7d72;
+	--accent-ink: #f4fffd;
+	--accent-2: #0a9385;
+	--line: #c9cdc1;
+	--line-strong: #aab0a1;
+	--shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+	--tag-green: #178a5e;
+}
+:root[data-theme='dark'] {
+	--bg: #0b0a0c;
+	--surface: #120920;
+	--surface-2: #190d2b;
+	--text: #eef1ea;
+	--text-muted: #a598c3;
+	--accent: #5eead4;
+	--accent-ink: #06201c;
+	--accent-2: #2fdcc9;
+	--line: #28163e;
+	--line-strong: #422862;
+	--mesh-1: #06030b;
+	--mesh-2: #0b0614;
+	--mesh-3: #100a1d;
+	--mesh-4: #160f26;
+	--shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+	--tag-green: #3ddc97;
+}
+* {
+	box-sizing: border-box;
+}
+
+html {
+	color-scheme: light dark;
+	scroll-behavior: smooth;
+	/* no sideways drag of the whole page (iOS rubber-bands 100vw sections), no pinch-zoom */
+	overflow-x: hidden;
+	overscroll-behavior-x: none;
+	touch-action: pan-y;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-text-size-adjust: 100%;
+}
+body {
+	overflow-x: clip;
+}
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text);
+	font-family: 'Manrope', system-ui, sans-serif;
+	font-size: 16px;
+	line-height: 1.6;
+	padding-inline: clamp(20px, 5vw, 64px);
+	-webkit-font-smoothing: antialiased;
+}
+@media (min-width: 1200px) {
+	body {
+		padding-left: 56px;
+	}
+}
+.wrap {
+	max-width: 1080px;
+	margin: 0 auto;
+}
+a {
+	color: inherit;
+}
+h1,
+h2,
+h3 {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 700;
+	text-wrap: balance;
+	margin: 0;
+}
+.mono {
+	font-family: 'Spline Sans Mono', monospace;
+}
+
+/* ---------- sections ---------- */
+section {
+	padding-block: clamp(40px, 7vw, 76px);
+}
+section + section {
+	border-top: 1px dashed color-mix(in srgb, var(--accent-2) 55%, var(--line));
+}
+.section-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin-bottom: 30px;
+}
+.section-head h2 {
+	font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+.section-head p {
+	margin: 0;
+	max-width: 46ch;
+	font-size: 0.92rem;
+	line-height: 1.5;
+	color: var(--text-muted);
+}
+
+/* ---------- language-swap scramble ---------- */
+.i18n-scrambling {
+	color: var(--text-muted);
+}
+.i18n-scrambling .sc-a {
+	color: var(--accent);
+	text-shadow: 0 0 6px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.i18n-scrambling .sc-b {
+	color: var(--tag-green);
+	text-shadow: 0 0 6px color-mix(in srgb, var(--tag-green) 60%, transparent);
+}
+.i18n-scrambling .sc-c {
+	color: var(--shift-echo);
+	text-shadow: 0 0 6px color-mix(in srgb, var(--shift-echo) 60%, transparent);
+}
+
+/* ---------- shared keyframes ---------- */
+@keyframes glow-pulse {
+	0%,
+	100% {
+		opacity: 0.28;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+@keyframes neon-flicker {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	4% {
+		opacity: 0.3;
+	}
+	6% {
+		opacity: 1;
+	}
+	7% {
+		opacity: 0.12;
+	}
+	9% {
+		opacity: 1;
+	}
+	9.5% {
+		opacity: 0.5;
+	}
+	10% {
+		opacity: 1;
+	}
+	31% {
+		opacity: 1;
+	}
+	32% {
+		opacity: 0.4;
+	}
+	34% {
+		opacity: 1;
+	}
+	58% {
+		opacity: 1;
+	}
+	59% {
+		opacity: 0.18;
+	}
+	60% {
+		opacity: 0.7;
+	}
+	61% {
+		opacity: 0.1;
+	}
+	62% {
+		opacity: 1;
+	}
+	85% {
+		opacity: 1;
+	}
+	86% {
+		opacity: 0.35;
+	}
+	87% {
+		opacity: 1;
+	}
+}
