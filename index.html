@@ -674,6 +674,10 @@
     letter-spacing:.08em;
     color:#93a0b5;
   }
+  button.contact{font-size:inherit;text-align:left;cursor:pointer;}
+  .contact-val{color:#93a0b5;}
+  a.contact .contact-val{color:inherit;}
+  .contact:hover .contact-val{color:inherit;}
   .contact:hover{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
   .contact:hover .contact-label{color:var(--accent-ink);}
 
@@ -876,14 +880,18 @@
       <h2 data-i18n="footer.title">Say hello</h2>
     </div>
     <div class="contact-row">
-      <a class="contact" href="mailto:contact@gdago.space">
+      <button type="button" class="contact" data-u="contact" data-d="gdago.space">
         <span class="contact-label" data-i18n="footer.play">wanna play?</span>
-        <span>contact@gdago.space</span>
-      </a>
-      <a class="contact" href="mailto:recruiting@gdago.space">
+        <span class="contact-val" data-i18n="footer.reveal">click to reveal</span>
+      </button>
+      <button type="button" class="contact" data-u="recruiting" data-d="gdago.space">
         <span class="contact-label" data-i18n="footer.business">mean business?</span>
-        <span>recruiting@gdago.space</span>
-      </a>
+        <span class="contact-val" data-i18n="footer.reveal">click to reveal</span>
+      </button>
+      <noscript>
+        <style>.contact{display:none;}</style>
+        <p class="mono">contact [at] gdago [dot] space<br>recruiting [at] gdago [dot] space</p>
+      </noscript>
     </div>
   </footer>
 
@@ -966,7 +974,8 @@
     },
     'footer.title': {en:'Say hello', it:'Scrivimi'},
     'footer.play': {en:'wanna play?', it:'vuoi giocare?'},
-    'footer.business': {en:'mean business?', it:'parliamo di lavoro?'}
+    'footer.business': {en:'mean business?', it:'parliamo di lavoro?'},
+    'footer.reveal': {en:'click to reveal', it:'clicca per vedere'}
   };
 
   var LANG_KEY = 'gdago-lang';
@@ -1501,5 +1510,23 @@
     }, delay);
   }
   scheduleFlicker();
+})();
+(function(){
+  // contact addresses never appear whole in the markup or the source: each
+  // card holds user + domain as separate data- parts and is only joined on
+  // click, then swapped for a real mailto: link.
+  document.querySelectorAll('button.contact[data-u]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var addr = btn.getAttribute('data-u') + '@' + btn.getAttribute('data-d');
+      var a = document.createElement('a');
+      a.className = btn.className;
+      a.href = 'mailto:' + addr;
+      while (btn.firstChild) a.appendChild(btn.firstChild);
+      var val = a.querySelector('.contact-val');
+      val.removeAttribute('data-i18n');
+      val.textContent = addr;
+      btn.parentNode.replaceChild(a, btn);
+    });
+  });
 })();
 </script>
